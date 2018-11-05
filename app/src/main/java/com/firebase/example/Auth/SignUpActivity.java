@@ -53,6 +53,9 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.btnSubmit)
     Button btnSubmit;
 
+    @BindView(R.id.btnLogin)
+    Button btnLogin;
+
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseDatabase database;
@@ -147,9 +150,15 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
+    @OnClick(R.id.btnLogin)
+    public void onBtnLogin() {
+        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void updateUI(FirebaseUser user) {
         //TODO
-
         if (user != null) {
             Toast.makeText(getApplicationContext(), user.getProviderId(), Toast.LENGTH_LONG).show();
         }
