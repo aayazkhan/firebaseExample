@@ -93,6 +93,14 @@
             android:text="SIGN UP"
             android:textColor="@color/colorAccent" />
 
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="LOGIN"
+            android:textColor="@color/colorAccent" />
 
     </LinearLayout>
+
 </LinearLayout>

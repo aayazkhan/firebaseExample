@@ -51,6 +51,7 @@
             android:id="@+id/btnSubmit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:background="@drawable/btn_background"
             android:text="LOGIN"
             android:textColor="@color/colorAccent" />
@@ -72,6 +73,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/dialog_holo_dark_frame" />
+
+            <Button
+                android:id="@+id/btnRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@null"
+                android:text="Create New Account"
+                android:textColor="@color/colorAccent" />
 
         </LinearLayout>
 

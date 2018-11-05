@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,6 +54,9 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.btnSubmit)
     Button btnSubmit;
 
+    @BindView(R.id.btnRegister)
+    Button btnRegister;
+
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private DatabaseReference databaseReferenceUsers;
@@ -60,8 +64,6 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleApiClient mGoogleApiClient;
 
     private ProgressDialog progressDialog;
-
-    private String strEmail, strPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,10 +117,48 @@ public class LoginActivity extends AppCompatActivity {
         updateUI(currentUser);
     }
 
+    @OnClick(R.id.btnSubmit)
+    public void onBtnSubmit() {
+        String strEmail = textEmail.getText().toString();
+        String strPassword = textPassword.getText().toString();
+
+        if (!TextUtils.isEmpty(strEmail) && !TextUtils.isEmpty(strPassword)) {
+
+            progressDialog.setMessage("Starting Google Sign In ...");
+            progressDialog.show();
+
+            mAuth.signInWithEmailAndPassword(strEmail, strPassword)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            progressDialog.dismiss();
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                System.out.println("signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                updateUI(user);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                System.out.println("signInWithEmail:failure" + task.getException());
+                                Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                                updateUI(null);
+                            }
+                        }
+                    });
+        }
+    }
+
     @OnClick(R.id.imageViewGoogleSignIn)
     public void onImageViewGoogleSignIn(View v) {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @OnClick(R.id.btnRegister)
+    public void onBtnRegister() {
+        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
