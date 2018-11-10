@@ -2,6 +2,8 @@ package com.firebase.example;
 
 import android.app.Application;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
@@ -18,6 +20,13 @@ public class MyApplication extends Application {
         super.onCreate();
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        FacebookSdk.setIsDebugEnabled(true);
+
+        FacebookSdk.setApplicationId(getString(R.string.facebook_app_id));
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
+        AppEventsLogger.activateApp(this);
 
         Picasso.Builder builder = new Picasso.Builder(this);
         builder.downloader(new OkHttp3Downloader(this, Integer.MAX_VALUE));

@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.firebase.example.Auth.LoginActivity;
 import com.firebase.example.model.Post;
 import com.firebase.example.viewHolder.PostViewHolder;
@@ -79,7 +80,6 @@ public class PostActivity extends AppCompatActivity {
         recyclerViewPosts.setHasFixedSize(true);
         recyclerViewPosts.setLayoutManager(new LinearLayoutManager(this));
 
-
     }
 
     @Override
@@ -122,6 +122,7 @@ public class PostActivity extends AppCompatActivity {
 
         if (R.id.action_logout == item.getItemId()) {
             mAuth.signOut();
+            LoginManager.getInstance().logOut();
         }
 
         return super.onOptionsItemSelected(item);

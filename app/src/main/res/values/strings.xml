@@ -4,4 +4,6 @@
     <string name="google_web_client_id">366620370541-42opgfej0ege4drs0ah9l36e1anbjk8d.apps.googleusercontent.com</string>
     <string name="google_client_secret">scZA_RH2VG58LF7UAb1Fo9K1</string>
 
+    <string name="facebook_app_id">537695040064894</string>
+    <string name="fb_login_protocol_scheme">fb537695040064894</string>
 </resources>

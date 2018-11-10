@@ -64,15 +64,17 @@
             android:orientation="vertical">
 
             <com.google.android.gms.common.SignInButton
-                android:id="@+id/imageViewGoogleSignIn"
+                android:id="@+id/btnGoogleSignIn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <ImageView
-                android:id="@+id/imageViewFacebookSignIn"
-                android:layout_width="wrap_content"
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/btnFacebookSignIn"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/dialog_holo_dark_frame" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="30dp" />
 
             <Button
                 android:id="@+id/btnRegister"
