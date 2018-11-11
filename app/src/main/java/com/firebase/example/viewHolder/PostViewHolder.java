@@ -29,7 +29,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     public void setImage(final Context context, final String imageURL) {
         final ImageView imageView = (ImageView) itemView.findViewById(R.id.imgViewtPostImage);
 
-        Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.image_background).into(imageView, new Callback() {
+        Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
             @Override
             public void onSuccess() {
 
