@@ -9,15 +9,17 @@ public class Post implements Serializable {
     private String description;
     private String image_url;
     private String  uid;
+    private String  userName;
 
     public Post() {
     }
 
-    public Post(String title, String description, String image_url, String uid) {
+    public Post(String title, String description, String image_url, String uid, String userName) {
         this.title = title;
         this.description = description;
         this.image_url = image_url;
         this.uid = uid;
+        this.userName = userName;
     }
 
     public String getTitle() {
@@ -50,5 +52,13 @@ public class Post implements Serializable {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

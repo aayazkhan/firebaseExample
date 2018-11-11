@@ -15,14 +15,22 @@ import android.widget.Toast;
 
 import com.firebase.example.Auth.LoginActivity;
 import com.firebase.example.model.Post;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,12 +61,16 @@ public class NewPostActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private DatabaseReference databaseReferenceUsers;
+    private DatabaseReference currentUserDatabaseReference;
+
     private DatabaseReference databaseReferencePosts;
     private StorageReference storageReference;
 
     private ProgressDialog progressDialog;
 
     private Uri imageUri;
+
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +90,8 @@ public class NewPostActivity extends AppCompatActivity {
         databaseReferenceUsers = FirebaseDatabase.getInstance().getReference(MyApplication.tbl_USERS);
         databaseReferenceUsers.keepSynced(true);
 
+        currentUserDatabaseReference = databaseReferenceUsers.child(user.getUid());
+
         databaseReferencePosts = FirebaseDatabase.getInstance().getReference(MyApplication.tbl_POSTS);
         databaseReferencePosts.keepSynced(true);
 
@@ -92,7 +106,6 @@ public class NewPostActivity extends AppCompatActivity {
         intent.setType("image/*");
         startActivityForResult(intent, GALLERY_REQUEST);
     }
-
 
     @OnClick(R.id.btnSubmit)
     public void onBtnSubmit() {
@@ -117,29 +130,48 @@ public class NewPostActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    final Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
-                    DatabaseReference newDatabaseReference = databaseReferencePosts.push();
+                    currentUserDatabaseReference = databaseReferenceUsers.child(user.getUid());
 
-                    newDatabaseReference.child("title").setValue(strTitle);
-                    newDatabaseReference.child("description").setValue(strDescription);
-                    newDatabaseReference.child("image_url").setValue(downloadUrl.toString());
-                    newDatabaseReference.child("UID").setValue(user.getUid());
+                    currentUserDatabaseReference.addValueEventListener(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            DatabaseReference newDatabaseReference = databaseReferencePosts.push();
+
+                            newDatabaseReference.child("title").setValue(strTitle);
+                            newDatabaseReference.child("description").setValue(strDescription);
+                            newDatabaseReference.child("image_url").setValue(downloadUrl.toString());
+                            newDatabaseReference.child("UID").setValue(user.getUid());
+                            newDatabaseReference.child("datetime").setValue(simpleDateFormat.format(new Date()));
+                            newDatabaseReference.child("userName").setValue(dataSnapshot.child("UserName").getValue())
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+
+                                            if (task.isSuccessful()) {
+                                                setResult(RESULT_OK);
+                                                finish();
+
+                                            }
+                                        }
+                                    });
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+
+                    });
+
 
                     progressDialog.dismiss();
-
-                    Post newPost = new Post();
-
-                    newPost.setTitle(strTitle);
-                    newPost.setDescription(strDescription);
-                    newPost.setImage_url(downloadUrl.toString());
-                    newPost.setUid(user.getUid());
-
-                    Intent intent = new Intent();
-                    intent.putExtra("new_post", newPost);
-
-                    setResult(RESULT_OK, intent);
-                    finish();
 
                 }
             });

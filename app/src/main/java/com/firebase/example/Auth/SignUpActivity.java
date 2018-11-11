@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.firebase.example.PostActivity;
@@ -79,12 +80,19 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference(MyApplication.tbl_USERS);
+        databaseReference.keepSynced(true);
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
-                    Intent intent = new Intent(SignUpActivity.this, PostActivity.class);
+                    Intent intent = new Intent(SignUpActivity.this, SetupActivity.class);
+
+                    intent.putExtra("firstName", strFirstName);
+                    intent.putExtra("lastName", strLastName);
+                    intent.putExtra("email", strEmail);
+                    intent.putExtra("mobile", strMobile);
+
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
@@ -101,6 +109,12 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth.addAuthStateListener(authStateListener);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(authStateListener);
     }
 
     @OnClick(R.id.btnSubmit)
@@ -125,17 +139,6 @@ public class SignUpActivity extends AppCompatActivity {
                             System.out.println("createUserWithEmail:success");
 
                             FirebaseUser user = mAuth.getCurrentUser();
-
-                            DatabaseReference newDatabaseReference = databaseReference.child(user.getUid());
-
-                            newDatabaseReference.child("UID").setValue(user.getUid());
-
-                            newDatabaseReference.child("ID").setValue(user.getUid());
-                            newDatabaseReference.child("FirstName").setValue(strFirstName);
-                            newDatabaseReference.child("LastName").setValue(strLastName);
-                            newDatabaseReference.child("Email").setValue(strEmail);
-                            newDatabaseReference.child("Mobile").setValue(strMobile);
-                            newDatabaseReference.child("ProfilePic").setValue(user.getPhotoUrl());
 
 
                             updateUI(user);

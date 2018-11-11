@@ -14,13 +14,17 @@ import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.firebase.example.Auth.LoginActivity;
+import com.firebase.example.Auth.SetupActivity;
 import com.firebase.example.model.Post;
 import com.firebase.example.viewHolder.PostViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,6 +89,9 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        checkUserExist();
+
         mAuth.addAuthStateListener(authStateListener);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
@@ -93,16 +100,65 @@ public class PostActivity extends AppCompatActivity {
                 (Post.class, R.layout.post_row, PostViewHolder.class, databaseReferencePosts) {
 
             @Override
-            protected void populateViewHolder(PostViewHolder viewHolder, Post model, int position) {
-                viewHolder.setImage(PostActivity.this, model.getImage_url());
-                viewHolder.setTitle(model.getTitle());
-                viewHolder.setDescription(model.getDescription());
+            protected void populateViewHolder(PostViewHolder postViewHolder, Post post, int position) {
+                postViewHolder.setImage(PostActivity.this, post.getImage_url());
+                postViewHolder.setTitle(post.getTitle());
+                postViewHolder.setDescription(post.getDescription());
+                postViewHolder.setUserName(post.getUserName());
             }
 
         };
 
         recyclerViewPosts.setAdapter(recyclerAdapter);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(authStateListener);
+    }
+
+    private void checkUserExist() {
+
+        final FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null) {
+
+            databaseReferenceUsers.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if (!dataSnapshot.hasChild(user.getUid())) {
+
+                        Intent intent = new Intent(PostActivity.this, SetupActivity.class);
+
+                        if (user.getDisplayName() != null) {
+
+                            if (user.getDisplayName().contains(" ")) {
+                                intent.putExtra("firstName", user.getDisplayName().split(" ")[0]);
+                                intent.putExtra("lastName", user.getDisplayName().split(" ")[1]);
+                            } else {
+                                intent.putExtra("firstName", user.getDisplayName());
+                            }
+                        }
+
+                        intent.putExtra("email", user.getEmail());
+
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -133,7 +189,7 @@ public class PostActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NEW_POST_REQUEST && resultCode == RESULT_OK) {
-            //recyclerAdapter.
+
         }
     }
 

@@ -2,6 +2,7 @@ package com.firebase.example.Auth;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,8 +39,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,7 +78,6 @@ public class LoginActivity extends AppCompatActivity {
     Button btnRegister;
 
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener authStateListener;
     private DatabaseReference databaseReferenceUsers;
     private GoogleSignInOptions gso;
     private GoogleApiClient mGoogleApiClient;
@@ -82,6 +85,8 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager mCallbackManager;
 
     private ProgressDialog progressDialog;
+
+    private String strFirstName, strLastName, strEmail, strPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         databaseReferenceUsers = FirebaseDatabase.getInstance().getReference(MyApplication.tbl_USERS);
+        databaseReferenceUsers.keepSynced(true);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -113,17 +119,6 @@ public class LoginActivity extends AppCompatActivity {
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        authStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() != null) {
-                    Intent intent = new Intent(LoginActivity.this, PostActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        };
 
         mCallbackManager = CallbackManager.Factory.create();
 
@@ -153,15 +148,14 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(authStateListener);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
 
     @OnClick(R.id.btnSubmit)
     public void onBtnSubmit() {
-        String strEmail = textEmail.getText().toString();
-        String strPassword = textPassword.getText().toString();
+        strEmail = textEmail.getText().toString();
+        strPassword = textPassword.getText().toString();
 
         if (!TextUtils.isEmpty(strEmail) && !TextUtils.isEmpty(strPassword)) {
 
@@ -175,8 +169,14 @@ public class LoginActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
+
                                 System.out.println("signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
+                                strEmail = user.getEmail();
+
+                                checkUserExist();
+
+
                                 updateUI(user);
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -187,6 +187,41 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private void checkUserExist() {
+
+        final String user_uid = mAuth.getCurrentUser().getUid();
+
+        databaseReferenceUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.hasChild(user_uid)) {
+
+                    Intent intent = new Intent(LoginActivity.this, PostActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+
+                } else {
+                    Intent intent = new Intent(LoginActivity.this, SetupActivity.class);
+
+                    intent.putExtra("firstName", strFirstName);
+                    intent.putExtra("lastName", strLastName);
+                    intent.putExtra("email", strEmail);
+                    intent.putExtra("profile_pic_uri", mAuth.getCurrentUser().getProviderData().get(0).getPhotoUrl());
+
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @OnClick(R.id.btnGoogleSignIn)
@@ -228,14 +263,29 @@ public class LoginActivity extends AppCompatActivity {
         System.out.println("handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+
+        progressDialog.setMessage("Starting Facebook Sign In ...");
+        progressDialog.show();
+
+
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        progressDialog.dismiss();
+
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             System.out.println("signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            strFirstName = user.getDisplayName().split(" ")[0];
+                            strLastName = user.getDisplayName().split(" ")[1];
+                            strEmail = user.getEmail();
+
+                            checkUserExist();
+
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -266,15 +316,12 @@ public class LoginActivity extends AppCompatActivity {
                             System.out.println("signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            DatabaseReference newDatabaseReference = databaseReferenceUsers.child(user.getUid());
 
-                            newDatabaseReference.child("UID").setValue(user.getUid());
+                            strFirstName = acct.getGivenName();
+                            strLastName = acct.getFamilyName();
+                            strEmail = user.getEmail();
 
-                            newDatabaseReference.child("ID").setValue(acct.getId());
-                            newDatabaseReference.child("FirstName").setValue(acct.getGivenName());
-                            newDatabaseReference.child("LastName").setValue(acct.getFamilyName());
-                            newDatabaseReference.child("Email").setValue(acct.getEmail());
-                            newDatabaseReference.child("ProfilePic").setValue(user.getPhotoUrl());
+                            checkUserExist();
 
                             updateUI(user);
                         } else {

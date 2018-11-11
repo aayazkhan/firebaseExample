@@ -14,8 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
             android:background="@drawable/image_background"
+            android:scaleType="centerCrop"
             android:src="@mipmap/ic_action_add" />
 
         <TextView
@@ -23,7 +23,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Title goes hear ..."
-            android:padding="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
             android:textSize="16dp"
             android:textStyle="bold" />
 
@@ -32,9 +34,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Description goes hear ..."
-            android:paddingBottom="15dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp" />
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+
+        <TextView
+            android:id="@+id/textPostUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
 
     </LinearLayout>
 
