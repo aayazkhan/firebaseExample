@@ -2,9 +2,9 @@ package com.firebase.example;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.facebook.login.LoginManager;
 import com.firebase.example.Auth.LoginActivity;
 import com.firebase.example.Auth.SetupActivity;
+import com.firebase.example.account.AccountProfile;
 import com.firebase.example.model.Post;
 import com.firebase.example.viewHolder.PostViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -33,6 +34,7 @@ import butterknife.Unbinder;
 public class PostActivity extends AppCompatActivity {
 
     private static final int NEW_POST_REQUEST = 1;
+    private static final int PROFILE = 2;
 
     private Unbinder unbinder;
 
@@ -163,7 +165,7 @@ public class PostActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.add_post, menu);
+        getMenuInflater().inflate(R.menu.menu_post_activity, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -174,6 +176,11 @@ public class PostActivity extends AppCompatActivity {
         if (R.id.action_add == item.getItemId()) {
             Intent intent = new Intent(PostActivity.this, NewPostActivity.class);
             startActivityForResult(intent, NEW_POST_REQUEST);
+        }
+
+        if (R.id.action_profile == item.getItemId()) {
+            Intent intent = new Intent(PostActivity.this, AccountProfile.class);
+            startActivityForResult(intent, PROFILE);
         }
 
         if (R.id.action_logout == item.getItemId()) {
