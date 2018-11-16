@@ -18,7 +18,6 @@ import com.firebase.example.Auth.LoginActivity;
 import com.firebase.example.Auth.SetupActivity;
 import com.firebase.example.account.AccountProfile;
 import com.firebase.example.account.SearchUser;
-import com.firebase.example.account.UserProfile;
 import com.firebase.example.model.Post;
 import com.firebase.example.viewHolder.PostViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -111,7 +110,7 @@ public class PostActivity extends AppCompatActivity {
                 postViewHolder.setTitle(post.getTitle());
                 postViewHolder.setDescription(post.getDescription());
 
-                DatabaseReference userDatabaseReference = databaseReferenceUsers.child(post.getUid());
+                DatabaseReference userDatabaseReference = databaseReferenceUsers.child(post.getUID());
 
                 userDatabaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -127,7 +126,6 @@ public class PostActivity extends AppCompatActivity {
 
                     }
                 });
-
 
                 postViewHolder.setUserName(post.getUserName());
 

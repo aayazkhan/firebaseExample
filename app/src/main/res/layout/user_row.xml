@@ -3,31 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/imgViewtUserImage"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/image_background"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_action_add" />
-
-        <TextView
-            android:id="@+id/textName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="UserName"
-            android:padding="10dp"
-            android:textSize="16dp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
+    <include layout="@layout/user" />
 
 </android.support.v7.widget.CardView>
