@@ -2,20 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_add"
+    <item
+        android:id="@+id/action_add"
         android:icon="@mipmap/ic_action_add"
         android:title="Add Post"
         app:showAsAction="always" />
 
-    <item android:id="@+id/action_profile"
+    <item
+        android:id="@+id/action_profile"
         android:title="Profile"
         app:showAsAction="never" />
 
-    <item android:id="@+id/action_setting"
+    <item
+        android:id="@+id/action_search"
+        android:title="Search"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_setting"
         android:title="Setting"
         app:showAsAction="never" />
 
-    <item android:id="@+id/action_logout"
+    <item
+        android:id="@+id/action_logout"
         android:title="logout"
         app:showAsAction="never" />
 

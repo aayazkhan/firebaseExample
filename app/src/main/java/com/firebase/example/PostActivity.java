@@ -16,6 +16,7 @@ import com.facebook.login.LoginManager;
 import com.firebase.example.Auth.LoginActivity;
 import com.firebase.example.Auth.SetupActivity;
 import com.firebase.example.account.AccountProfile;
+import com.firebase.example.account.SearchUser;
 import com.firebase.example.model.Post;
 import com.firebase.example.viewHolder.PostViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -35,6 +36,7 @@ public class PostActivity extends AppCompatActivity {
 
     private static final int NEW_POST_REQUEST = 1;
     private static final int PROFILE = 2;
+    private static final int SEARCH = 3;
 
     private Unbinder unbinder;
 
@@ -183,6 +185,15 @@ public class PostActivity extends AppCompatActivity {
             startActivityForResult(intent, PROFILE);
         }
 
+        if (R.id.action_search == item.getItemId()) {
+            Intent intent = new Intent(PostActivity.this, SearchUser.class);
+            startActivityForResult(intent, SEARCH);
+        }
+
+        if (R.id.action_setting == item.getItemId()) {
+            Toast.makeText(getApplicationContext(), " WIP ", Toast.LENGTH_LONG).show();
+        }
+
         if (R.id.action_logout == item.getItemId()) {
             mAuth.signOut();
             LoginManager.getInstance().logOut();
@@ -202,11 +213,6 @@ public class PostActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         //TODO
-
-        if (user != null) {
-            Toast.makeText(getApplicationContext(), user.getProviderId(), Toast.LENGTH_LONG).show();
-        }
-
     }
 
     @Override

@@ -162,9 +162,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         //TODO
-        if (user != null) {
-            Toast.makeText(getApplicationContext(), user.getProviderId(), Toast.LENGTH_LONG).show();
-        }
 
     }
 

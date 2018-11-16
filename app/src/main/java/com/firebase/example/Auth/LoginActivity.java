@@ -202,6 +202,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, PostActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+                    finish();
 
                 } else {
                     Intent intent = new Intent(LoginActivity.this, SetupActivity.class);
@@ -213,6 +214,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+                    finish();
                 }
             }
 
@@ -338,11 +340,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         //TODO
-
-        if (user != null) {
-            Toast.makeText(getApplicationContext(), user.getProviderId(), Toast.LENGTH_LONG).show();
-        }
-
     }
 
 

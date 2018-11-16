@@ -211,10 +211,6 @@ public class SetupActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         //TODO
-        if (user != null) {
-            Toast.makeText(getApplicationContext(), user.getProviderId(), Toast.LENGTH_LONG).show();
-        }
-
     }
 
     @Override
