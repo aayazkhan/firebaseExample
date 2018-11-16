@@ -12,7 +12,7 @@
 
         <ImageView
             android:id="@+id/imgViewtUserImage"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="60dp"
             android:adjustViewBounds="true"
             android:background="@drawable/image_background"
@@ -23,7 +23,7 @@
             android:id="@+id/textName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="UserName ..."
+            android:hint="UserName"
             android:padding="10dp"
             android:textSize="16dp"
             android:textStyle="bold" />

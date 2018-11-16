@@ -43,7 +43,8 @@
         <activity android:name=".Auth.SetupActivity" />
         <activity android:name=".account.AccountProfile" />
         <activity android:name=".account.UserProfile" />
-        <activity android:name=".account.SearchUser"></activity>
+        <activity android:name=".account.SearchUser" />
+        <activity android:name=".SinglePostActivity"></activity>
     </application>
 
 </manifest>

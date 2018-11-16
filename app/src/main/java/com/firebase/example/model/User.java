@@ -2,19 +2,20 @@ package com.firebase.example.model;
 
 public class User {
 
-    private String ID, firstName, lastName,email, mobile, profilePic, uID;
+    private String ID, FirstName, LastName, Email, Mobile, ProfilePic, UserName, UID;
 
     public User() {
     }
 
-    public User(String ID, String firstName, String lastName, String email, String mobile, String profilePic, String uID) {
+    public User(String ID, String firstName, String lastName, String email, String mobile, String profilePic, String userName, String UID) {
         this.ID = ID;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.mobile = mobile;
-        this.profilePic = profilePic;
-        this.uID = uID;
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        Mobile = mobile;
+        ProfilePic = profilePic;
+        UserName = userName;
+        this.UID = UID;
     }
 
     public String getID() {
@@ -26,50 +27,59 @@ public class User {
     }
 
     public String getFirstName() {
-        return firstName;
+        return FirstName;
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        FirstName = firstName;
     }
 
     public String getLastName() {
-        return lastName;
+        return LastName;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        LastName = lastName;
     }
 
     public String getEmail() {
-        return email;
+        return Email;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        Email = email;
     }
 
     public String getMobile() {
-        return mobile;
+        return Mobile;
     }
 
     public void setMobile(String mobile) {
-        this.mobile = mobile;
+        Mobile = mobile;
     }
 
     public String getProfilePic() {
-        return profilePic;
+        return ProfilePic;
     }
 
     public void setProfilePic(String profilePic) {
-        this.profilePic = profilePic;
+        ProfilePic = profilePic;
     }
 
-    public String getuID() {
-        return uID;
+    public String getUserName() {
+        return UserName;
     }
 
-    public void setuID(String uID) {
-        this.uID = uID;
+    public void setUserName(String userName) {
+        UserName = userName;
+    }
+
+    public String getUID() {
+        return UID;
+    }
+
+    public void setUID(String UID) {
+        this.UID = UID;
     }
 }
+

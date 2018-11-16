@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 
 public class PostViewHolder extends RecyclerView.ViewHolder {
 
-    private View itemView;
+    public View itemView;
 
     public PostViewHolder(View itemView) {
         super(itemView);
@@ -54,8 +54,26 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         textDescription.setText(description);
     }
 
+    public void setUserNameImage(final Context context, final String imageURL) {
+        final ImageView imageView = (ImageView) itemView.findViewById(R.id.imgViewtUserImage);
+
+        Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError() {
+
+                Picasso.with(context).load(imageURL).into(imageView);
+            }
+        });
+
+    }
+
     public void setUserName(String userName) {
-        TextView textUserName = (TextView) itemView.findViewById(R.id.textPostUserName);
+        TextView textUserName = (TextView) itemView.findViewById(R.id.textName);
         textUserName.setText(userName);
     }
 

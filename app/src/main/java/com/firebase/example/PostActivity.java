@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
@@ -17,6 +18,7 @@ import com.firebase.example.Auth.LoginActivity;
 import com.firebase.example.Auth.SetupActivity;
 import com.firebase.example.account.AccountProfile;
 import com.firebase.example.account.SearchUser;
+import com.firebase.example.account.UserProfile;
 import com.firebase.example.model.Post;
 import com.firebase.example.viewHolder.PostViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -104,11 +106,42 @@ public class PostActivity extends AppCompatActivity {
                 (Post.class, R.layout.post_row, PostViewHolder.class, databaseReferencePosts) {
 
             @Override
-            protected void populateViewHolder(PostViewHolder postViewHolder, Post post, int position) {
+            protected void populateViewHolder(final PostViewHolder postViewHolder, Post post, final int position) {
                 postViewHolder.setImage(PostActivity.this, post.getImage_url());
                 postViewHolder.setTitle(post.getTitle());
                 postViewHolder.setDescription(post.getDescription());
+
+                DatabaseReference userDatabaseReference = databaseReferenceUsers.child(post.getUid());
+
+                userDatabaseReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        String profilePic = (String) dataSnapshot.child("ProfilePic").getValue();
+                        postViewHolder.setUserNameImage(PostActivity.this, profilePic);
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
                 postViewHolder.setUserName(post.getUserName());
+
+                postViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String POST_KEY = getRef(position).getKey();
+
+                        Intent intent = new Intent(PostActivity.this, SinglePostActivity.class);
+                        intent.putExtra("post_id", POST_KEY);
+                        startActivity(intent);
+
+                    }
+                });
             }
 
         };

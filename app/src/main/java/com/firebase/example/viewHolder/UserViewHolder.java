@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 
 public class UserViewHolder extends RecyclerView.ViewHolder {
 
-    private View itemView;
+    public View itemView;
 
     public UserViewHolder(View itemView) {
         super(itemView);
