@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">firebaseExample</string>
+    <string name="app_name">firebase</string>
 
     <string name="google_web_client_id">366620370541-42opgfej0ege4drs0ah9l36e1anbjk8d.apps.googleusercontent.com</string>
     <string name="google_client_secret">scZA_RH2VG58LF7UAb1Fo9K1</string>

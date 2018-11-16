@@ -15,9 +15,9 @@ import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.firebase.example.Auth.LoginActivity;
-import com.firebase.example.Auth.SetupActivity;
 import com.firebase.example.account.AccountProfile;
 import com.firebase.example.account.SearchUser;
+import com.firebase.example.account.SetupActivity;
 import com.firebase.example.model.Post;
 import com.firebase.example.viewHolder.PostViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
