@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.firebase.example.MyApplication;
 import com.firebase.example.R;
-import com.firebase.example.account.SetupActivity;
+import com.firebase.example.account.SetupAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -85,7 +85,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
-                    Intent intent = new Intent(SignUpActivity.this, SetupActivity.class);
+                    Intent intent = new Intent(SignUpActivity.this, SetupAccount.class);
 
                     intent.putExtra("firstName", strFirstName);
                     intent.putExtra("lastName", strLastName);

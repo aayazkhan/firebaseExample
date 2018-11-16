@@ -17,7 +17,7 @@ import com.facebook.login.LoginManager;
 import com.firebase.example.Auth.LoginActivity;
 import com.firebase.example.account.AccountProfile;
 import com.firebase.example.account.SearchUser;
-import com.firebase.example.account.SetupActivity;
+import com.firebase.example.account.SetupAccount;
 import com.firebase.example.model.Post;
 import com.firebase.example.viewHolder.PostViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -165,7 +165,7 @@ public class PostActivity extends AppCompatActivity {
 
                     if (!dataSnapshot.hasChild(user.getUid())) {
 
-                        Intent intent = new Intent(PostActivity.this, SetupActivity.class);
+                        Intent intent = new Intent(PostActivity.this, SetupAccount.class);
 
                         if (user.getDisplayName() != null) {
 
