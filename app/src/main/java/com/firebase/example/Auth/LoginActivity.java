@@ -21,7 +21,7 @@ import com.facebook.login.widget.LoginButton;
 import com.firebase.example.MyApplication;
 import com.firebase.example.PostActivity;
 import com.firebase.example.R;
-import com.firebase.example.account.SetupActivity;
+import com.firebase.example.account.SetupAccount;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -203,7 +203,7 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
 
                 } else {
-                    Intent intent = new Intent(LoginActivity.this, SetupActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, SetupAccount.class);
 
                     intent.putExtra("firstName", strFirstName);
                     intent.putExtra("lastName", strLastName);
