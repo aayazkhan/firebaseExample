@@ -18,6 +18,7 @@ import com.firebase.example.Auth.LoginActivity;
 import com.firebase.example.account.AccountProfile;
 import com.firebase.example.account.SearchUser;
 import com.firebase.example.account.SetupAccount;
+import com.firebase.example.account.UserProfile;
 import com.firebase.example.model.Post;
 import com.firebase.example.viewHolder.PostViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -129,15 +130,40 @@ public class PostActivity extends AppCompatActivity {
 
                 postViewHolder.setUserName(post.getUserName());
 
-                postViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                postViewHolder.itemView.findViewById(R.id.linearLayoutUser).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        final DatabaseReference databaseReference = getRef(position);
+
+                        databaseReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                String user_id = dataSnapshot.child("UID").getValue().toString();
+
+                                Intent intent = new Intent(PostActivity.this, UserProfile.class);
+                                intent.putExtra("user_id", user_id);
+                                startActivity(intent);
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                });
+
+                postViewHolder.itemView.findViewById(R.id.linearLayoutPost).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
                         String POST_KEY = getRef(position).getKey();
 
                         Intent intent = new Intent(PostActivity.this, SinglePostActivity.class);
                         intent.putExtra("post_id", POST_KEY);
                         startActivity(intent);
-
                     }
                 });
             }

@@ -174,8 +174,9 @@ public class SetupAccount extends AppCompatActivity {
                     newDatabaseReference.child("LastName").setValue(strLastName);
                     newDatabaseReference.child("Email").setValue(strEmail);
                     newDatabaseReference.child("Mobile").setValue(strMobile);
+                    newDatabaseReference.child("Gender").setValue(strGender);
                     newDatabaseReference.child("ProfilePic").setValue(downloadUrl.toString());
-                    newDatabaseReference.child("UserName").setValue(strFirstName + " "+ strLastName)
+                    newDatabaseReference.child("UserName").setValue(strFirstName + " " + strLastName)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
 
                                 @Override
