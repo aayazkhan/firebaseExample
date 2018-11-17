@@ -117,8 +117,11 @@ public class PostActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        String profilePic = (String) dataSnapshot.child("ProfilePic").getValue();
+                        String userName = dataSnapshot.child("UserName").getValue().toString();
+                        String profilePic = dataSnapshot.child("ProfilePic").getValue().toString();
+
                         postViewHolder.setUserNameImage(PostActivity.this, profilePic);
+                        postViewHolder.setUserName(userName);
 
                     }
 
@@ -127,8 +130,6 @@ public class PostActivity extends AppCompatActivity {
 
                     }
                 });
-
-                postViewHolder.setUserName(post.getUserName());
 
                 postViewHolder.itemView.findViewById(R.id.linearLayoutUser).setOnClickListener(new View.OnClickListener() {
                     @Override

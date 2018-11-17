@@ -145,22 +145,17 @@ public class NewPostActivity extends AppCompatActivity {
                             newDatabaseReference.child("description").setValue(strDescription);
                             newDatabaseReference.child("image_url").setValue(downloadUrl.toString());
                             newDatabaseReference.child("UID").setValue(user.getUid());
-                            newDatabaseReference.child("datetime").setValue(simpleDateFormat.format(new Date()));
-                            newDatabaseReference.child("userName").setValue(dataSnapshot.child("UserName").getValue())
+                            newDatabaseReference.child("datetime").setValue(simpleDateFormat.format(new Date()))
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
 
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-
                                             if (task.isSuccessful()) {
                                                 setResult(RESULT_OK);
                                                 finish();
-
                                             }
                                         }
                                     });
-
-
                         }
 
                         @Override

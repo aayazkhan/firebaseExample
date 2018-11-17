@@ -92,11 +92,11 @@ public class SinglePostActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        String postTitle = (String) dataSnapshot.child("title").getValue();
-                        String postDesc = (String) dataSnapshot.child("description").getValue();
-                        final String postImage_url = (String) dataSnapshot.child("image_url").getValue();
-                        String postDateTime = (String) dataSnapshot.child("datetime").getValue();
-                        String postUid = (String) dataSnapshot.child("UID").getValue();
+                        String postTitle = dataSnapshot.child("title").getValue().toString();
+                        String postDesc = dataSnapshot.child("description").getValue().toString();
+                        final String postImage_url = dataSnapshot.child("image_url").getValue().toString();
+                        String postDateTime = dataSnapshot.child("datetime").getValue().toString();
+                        String postUid = dataSnapshot.child("UID").getValue().toString();
 
                         textPostTitle.setText(postTitle);
                         textPostDescription.setText(postDesc);
@@ -120,8 +120,8 @@ public class SinglePostActivity extends AppCompatActivity {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                String postUserName = (String) dataSnapshot.child("UserName").getValue();
-                                final String postUserProfilePic = (String) dataSnapshot.child("ProfilePic").getValue();
+                                String postUserName = dataSnapshot.child("UserName").getValue().toString();
+                                final String postUserProfilePic = dataSnapshot.child("ProfilePic").getValue().toString();
 
                                 textName.setText(postUserName);
 

@@ -126,6 +126,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:cursorVisible="false"
+                android:editable="false"
+                android:focusable="false"
                 android:hint="First Name"
                 android:padding="10dp" />
 
@@ -140,6 +143,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:cursorVisible="false"
+                android:editable="false"
+                android:focusable="false"
                 android:hint="Last Name"
                 android:padding="10dp" />
 
@@ -154,6 +160,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:cursorVisible="false"
+                android:editable="false"
+                android:focusable="false"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
                 android:padding="10dp" />
@@ -170,46 +179,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:cursorVisible="false"
+                android:editable="false"
+                android:focusable="false"
                 android:hint="Mobile"
                 android:inputType="number"
                 android:padding="10dp" />
 
         </android.support.design.widget.TextInputLayout>
 
-        <RadioGroup
-            android:id="@+id/rdoGrpGender"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <RadioButton
-                android:id="@+id/rdoBtnMale"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/textGender"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:text="Male" />
+                android:background="@android:color/transparent"
+                android:cursorVisible="false"
+                android:editable="false"
+                android:focusable="false"
+                android:hint="Gender"
+                android:inputType="number"
+                android:padding="10dp" />
 
-            <RadioButton
-                android:id="@+id/rdoBtnFemale"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:text="Female" />
-
-        </RadioGroup>
-
-        <Button
-            android:id="@+id/btnSubmit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_background"
-            android:text="Update"
-            android:textColor="@color/colorAccent" />
-
+        </android.support.design.widget.TextInputLayout>
+        
     </LinearLayout>
 
 </LinearLayout>
