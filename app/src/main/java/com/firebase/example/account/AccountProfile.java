@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.firebase.example.MyApplication;
 import com.firebase.example.R;
@@ -158,7 +159,7 @@ public class AccountProfile extends AppCompatActivity implements View.OnLongClic
 
         textFirstName.setOnLongClickListener(this);
         textLastName.setOnLongClickListener(this);
-//        textEmail.setOnLongClickListener(this);
+        textEmail.setOnLongClickListener(this);
         textMobile.setOnLongClickListener(this);
         textGender.setOnLongClickListener(this);
 
@@ -175,6 +176,7 @@ public class AccountProfile extends AppCompatActivity implements View.OnLongClic
                 break;
             case R.id.textEmail:
 //                showDialogToUpdate("Email", strEmail, "Email");
+                Toast.makeText(getApplicationContext(), " cannot change email ! ", Toast.LENGTH_LONG).show();
                 break;
             case R.id.textMobile:
                 showDialogToUpdate("Mobile", strMobile, "Mobile");
