@@ -132,10 +132,14 @@ public class PostActivity extends AppCompatActivity {
 
                                 String user_id = dataSnapshot.child("UID").getValue().toString();
 
-                                Intent intent = new Intent(PostActivity.this, UserProfile.class);
-                                intent.putExtra("user_id", user_id);
-                                startActivity(intent);
-
+                                if (mAuth.getCurrentUser().getUid().equalsIgnoreCase(user_id)) {
+                                    Intent intent = new Intent(PostActivity.this, AccountProfile.class);
+                                    startActivity(intent);
+                                } else {
+                                    Intent intent = new Intent(PostActivity.this, UserProfile.class);
+                                    intent.putExtra("user_id", user_id);
+                                    startActivity(intent);
+                                }
                             }
 
                             @Override

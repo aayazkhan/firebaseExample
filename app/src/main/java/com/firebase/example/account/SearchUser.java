@@ -83,7 +83,7 @@ public class SearchUser extends AppCompatActivity {
                 (User.class, R.layout.user_row, UserViewHolder.class, databaseReferenceUsers) {
 
             @Override
-            protected void populateViewHolder(UserViewHolder userViewHolder, User user, final int position) {
+            protected void populateViewHolder(UserViewHolder userViewHolder, final User user, final int position) {
                 userViewHolder.setImage(SearchUser.this, user.getProfilePic());
                 userViewHolder.setName(user.getFirstName() + " " + user.getLastName());
 
@@ -93,10 +93,14 @@ public class SearchUser extends AppCompatActivity {
                     public void onClick(View v) {
                         String USER_KEY = getRef(position).getKey();
 
-                        Intent intent = new Intent(SearchUser.this, UserProfile.class);
-                        intent.putExtra("user_id", USER_KEY);
-                        startActivity(intent);
-
+                        if (user.getUID().equalsIgnoreCase(USER_KEY)) {
+                            Intent intent = new Intent(SearchUser.this, AccountProfile.class);
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(SearchUser.this, UserProfile.class);
+                            intent.putExtra("user_id", USER_KEY);
+                            startActivity(intent);
+                        }
                     }
                 });
             }

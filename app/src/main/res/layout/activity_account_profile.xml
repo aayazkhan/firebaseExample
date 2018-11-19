@@ -30,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:orientation="horizontal"
             android:weightSum="3">
@@ -205,7 +206,7 @@
                 android:padding="10dp" />
 
         </android.support.design.widget.TextInputLayout>
-        
+
     </LinearLayout>
 
 </LinearLayout>

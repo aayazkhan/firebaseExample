@@ -12,6 +12,7 @@ public class MyApplication extends Application {
 
     public static String tbl_USERS = "Users";
     public static String tbl_POSTS = "Posts";
+    public static String tbl_FOLLOWING = "Following";
 
     public static String FOLDER_POST_IMAGE = "post_image";
     public static String FOLDER_PROFILE_IMAGE = "profile_image";

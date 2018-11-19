@@ -35,8 +35,13 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class UserProfile extends AppCompatActivity {
@@ -66,6 +71,8 @@ public class UserProfile extends AppCompatActivity {
     private DatabaseReference databaseReferenceUsers;
     private DatabaseReference currentUserDatabaseReference;
     private DatabaseReference databaseReferencePosts;
+    private DatabaseReference databaseReferenceFollowings;
+    private DatabaseReference userDatabaseReferenceFollowings;
     private DatabaseReference userDatabaseReference;
 
     private FirebaseRecyclerAdapter recyclerAdapter;
@@ -76,7 +83,8 @@ public class UserProfile extends AppCompatActivity {
 
     private int postCount, devicewidth;
 
-    private Uri imageUri;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +107,9 @@ public class UserProfile extends AppCompatActivity {
         databaseReferencePosts = FirebaseDatabase.getInstance().getReference(MyApplication.tbl_POSTS);
         databaseReferencePosts.keepSynced(true);
 
+        databaseReferenceFollowings = FirebaseDatabase.getInstance().getReference(MyApplication.tbl_FOLLOWING);
+        databaseReferenceFollowings.keepSynced(true);
+
         currentUserDatabaseReference = databaseReferenceUsers.child(user.getUid());
 
         layoutManager = new GridLayoutManager(UserProfile.this, 3);
@@ -107,7 +118,6 @@ public class UserProfile extends AppCompatActivity {
 
         userPostList.addItemDecoration(new DividerItemDecoration(UserProfile.this, DividerItemDecoration.VERTICAL));
         userPostList.addItemDecoration(new DividerItemDecoration(UserProfile.this, DividerItemDecoration.HORIZONTAL));
-
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         UserProfile.this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -120,7 +130,7 @@ public class UserProfile extends AppCompatActivity {
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey("user_id")) {
 
-                String user_id = savedInstanceState.getString("user_id");
+                final String user_id = savedInstanceState.getString("user_id");
 
                 userDatabaseReference = databaseReferenceUsers.child(user_id);
 
@@ -146,15 +156,33 @@ public class UserProfile extends AppCompatActivity {
 
                             });
 
-                            String userUID = dataSnapshot.child("UID").getValue().toString();
+                            userDatabaseReferenceFollowings = databaseReferenceFollowings.child(user.getUid() +"|"+ user_id);
 
-                            Query query = databaseReferencePosts.orderByChild("UID").equalTo(userUID);
+                            userDatabaseReferenceFollowings.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            query.addValueEventListener(new ValueEventListener() {
+                                    if (dataSnapshot.getChildrenCount() > 0) {
+                                        textFollowerFollowing.setText("Un follow");
+                                    } else {
+                                        textFollowerFollowing.setText("follow");
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+                            Query queryUserPost = databaseReferencePosts.orderByChild("UID").equalTo(user_id);
+
+                            queryUserPost.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     postCount = (int) dataSnapshot.getChildrenCount();
-                                    textPostCount.setText("" + ((int) dataSnapshot.getChildrenCount()));
+                                    textPostCount.setText("" + postCount);
                                 }
 
                                 @Override
@@ -164,7 +192,7 @@ public class UserProfile extends AppCompatActivity {
                             });
 
                             adapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(
-                                    Post.class, R.layout.post_row, PostViewHolder.class, query) {
+                                    Post.class, R.layout.post_row, PostViewHolder.class, queryUserPost) {
 
                                 @Override
                                 protected void populateViewHolder(PostViewHolder viewHolder, Post post, final int position) {
@@ -177,10 +205,8 @@ public class UserProfile extends AppCompatActivity {
 
                                     viewHolder.setImage(UserProfile.this, post.getImage_url());
 
-                                    if (postCount > 2) {
-                                        viewHolder.getItemView().getLayoutParams().width = devicewidth;
-                                        viewHolder.getItemView().getLayoutParams().height = devicewidth;
-                                    }
+                                    viewHolder.getItemView().getLayoutParams().width = devicewidth;
+                                    viewHolder.getItemView().getLayoutParams().height = devicewidth;
 
                                     viewHolder.getItemView().setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -216,6 +242,23 @@ public class UserProfile extends AppCompatActivity {
         }
 
     }
+
+
+    @OnClick(R.id.textFollowerFollowing)
+    public void onTextFollowerFollowing() {
+
+        if (textFollowerFollowing.getText().toString().equalsIgnoreCase("follow")) {
+
+            userDatabaseReferenceFollowings.child("UID").setValue(user.getUid());
+            userDatabaseReferenceFollowings.child("FollowUID").setValue(user.getUid());
+            userDatabaseReferenceFollowings.child("datetime").setValue(simpleDateFormat.format(new Date()));
+
+        } else {
+            userDatabaseReferenceFollowings.removeValue();
+        }
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
