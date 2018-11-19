@@ -17,19 +17,51 @@ import com.squareup.picasso.Picasso;
 
 public class PostViewHolder extends RecyclerView.ViewHolder {
 
-    public View itemView;
+    private View itemView;
+    private ImageView imageViewPostImage, imgViewtUserImage;
+    private TextView textUserName, textTitle, textDescription;
+
 
     public PostViewHolder(View itemView) {
         super(itemView);
-
         this.itemView = itemView;
+
+        imgViewtUserImage = (ImageView) itemView.findViewById(R.id.imgViewtUserImage);
+        textUserName = (TextView) itemView.findViewById(R.id.textName);
+
+        imageViewPostImage = (ImageView) itemView.findViewById(R.id.imgViewtPostImage);
+        textTitle = (TextView) itemView.findViewById(R.id.textPostTitle);
+        textDescription = (TextView) itemView.findViewById(R.id.textPostDescription);
 
     }
 
-    public void setImage(final Context context, final String imageURL) {
-        final ImageView imageView = (ImageView) itemView.findViewById(R.id.imgViewtPostImage);
+    public View getItemView() {
+        return itemView;
+    }
 
-        Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
+    public ImageView getImageViewPostImage() {
+        return imageViewPostImage;
+    }
+
+    public ImageView getImgViewtUserImage() {
+        return imgViewtUserImage;
+    }
+
+    public TextView getTextUserName() {
+        return textUserName;
+    }
+
+    public TextView getTextTitle() {
+        return textTitle;
+    }
+
+    public TextView getTextDescription() {
+        return textDescription;
+    }
+
+    public void setImage(final Context context, final String imageURL) {
+
+        Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE).into(imageViewPostImage, new Callback() {
             @Override
             public void onSuccess() {
 
@@ -38,26 +70,23 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onError() {
 
-                Picasso.with(context).load(imageURL).into(imageView);
+                Picasso.with(context).load(imageURL).into(imageViewPostImage);
             }
         });
 
     }
 
     public void setTitle(String title) {
-        TextView textTitle = (TextView) itemView.findViewById(R.id.textPostTitle);
         textTitle.setText(title);
     }
 
     public void setDescription(String description) {
-        TextView textDescription = (TextView) itemView.findViewById(R.id.textPostDescription);
         textDescription.setText(description);
     }
 
     public void setUserNameImage(final Context context, final String imageURL) {
-        final ImageView imageView = (ImageView) itemView.findViewById(R.id.imgViewtUserImage);
 
-        Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
+        Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE).into(imgViewtUserImage, new Callback() {
             @Override
             public void onSuccess() {
 
@@ -66,15 +95,30 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onError() {
 
-                Picasso.with(context).load(imageURL).into(imageView);
+                Picasso.with(context).load(imageURL).into(imgViewtUserImage);
             }
         });
 
     }
 
     public void setUserName(String userName) {
-        TextView textUserName = (TextView) itemView.findViewById(R.id.textName);
         textUserName.setText(userName);
+    }
+
+    public void setTitleVisibility(int visibility) {
+        textTitle.setVisibility(visibility);
+    }
+
+    public void setDescriptionVisibility(int visibility) {
+        textDescription.setVisibility(visibility);
+    }
+
+    public void setUserNameVisibility(int visibility) {
+        textUserName.setVisibility(visibility);
+    }
+
+    public void setUserNameImageVisibility(int visibility) {
+        imgViewtUserImage.setVisibility(visibility);
     }
 
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -67,6 +68,8 @@ public class SearchUser extends AppCompatActivity {
 
         recyclerViewUsers.setHasFixedSize(true);
         recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewUsers.addItemDecoration(new DividerItemDecoration(SearchUser.this, DividerItemDecoration.VERTICAL));
+
     }
 
     @Override

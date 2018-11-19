@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -89,18 +90,7 @@ public class PostActivity extends AppCompatActivity {
 
         recyclerViewPosts.setHasFixedSize(true);
         recyclerViewPosts.setLayoutManager(new LinearLayoutManager(this));
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        checkUserExist();
-
-        mAuth.addAuthStateListener(authStateListener);
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        recyclerViewPosts.addItemDecoration(new DividerItemDecoration(PostActivity.this, DividerItemDecoration.VERTICAL));
 
         recyclerAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>
                 (Post.class, R.layout.post_row, PostViewHolder.class, databaseReferencePosts) {
@@ -131,7 +121,7 @@ public class PostActivity extends AppCompatActivity {
                     }
                 });
 
-                postViewHolder.itemView.findViewById(R.id.linearLayoutUser).setOnClickListener(new View.OnClickListener() {
+                postViewHolder.getItemView().findViewById(R.id.linearLayoutUser).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         final DatabaseReference databaseReference = getRef(position);
@@ -156,7 +146,7 @@ public class PostActivity extends AppCompatActivity {
                     }
                 });
 
-                postViewHolder.itemView.findViewById(R.id.linearLayoutPost).setOnClickListener(new View.OnClickListener() {
+                postViewHolder.getItemView().findViewById(R.id.linearLayoutPost).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -172,6 +162,19 @@ public class PostActivity extends AppCompatActivity {
         };
 
         recyclerViewPosts.setAdapter(recyclerAdapter);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        checkUserExist();
+
+        mAuth.addAuthStateListener(authStateListener);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
+
     }
 
     @Override

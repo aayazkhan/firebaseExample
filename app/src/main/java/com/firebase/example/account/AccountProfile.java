@@ -208,7 +208,20 @@ public class AccountProfile extends AppCompatActivity implements View.OnLongClic
         builder.setPositiveButton("update", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                currentUserDatabaseReference.child(serverVeriableName).setValue(editText.getText().toString());
+
+                if (serverVeriableName.equalsIgnoreCase("firstname")) {
+
+                    currentUserDatabaseReference.child(serverVeriableName).setValue(editText.getText().toString());
+                    currentUserDatabaseReference.child("UserName").setValue(editText.getText().toString() + " " + strLastName);
+
+                } else if (serverVeriableName.equalsIgnoreCase("lastname")) {
+
+                    currentUserDatabaseReference.child(serverVeriableName).setValue(editText.getText().toString());
+                    currentUserDatabaseReference.child("UserName").setValue(strFirstName + " " + editText.getText().toString());
+
+                } else {
+                    currentUserDatabaseReference.child(serverVeriableName).setValue(editText.getText().toString());
+                }
             }
         });
 
