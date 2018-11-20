@@ -81,6 +81,8 @@ public class UserProfile extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
 
+    private String user_id;
+
     private int postCount, devicewidth;
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -130,7 +132,7 @@ public class UserProfile extends AppCompatActivity {
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey("user_id")) {
 
-                final String user_id = savedInstanceState.getString("user_id");
+                user_id = savedInstanceState.getString("user_id");
 
                 userDatabaseReference = databaseReferenceUsers.child(user_id);
 
@@ -250,7 +252,7 @@ public class UserProfile extends AppCompatActivity {
         if (textFollowerFollowing.getText().toString().equalsIgnoreCase("follow")) {
 
             userDatabaseReferenceFollowings.child("UID").setValue(user.getUid());
-            userDatabaseReferenceFollowings.child("FollowUID").setValue(user.getUid());
+            userDatabaseReferenceFollowings.child("FollowUID").setValue(user_id);
             userDatabaseReferenceFollowings.child("datetime").setValue(simpleDateFormat.format(new Date()));
 
         } else {

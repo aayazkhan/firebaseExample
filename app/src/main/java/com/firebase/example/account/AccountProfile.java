@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.example.MyApplication;
@@ -33,6 +34,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -60,6 +62,15 @@ public class AccountProfile extends AppCompatActivity implements View.OnLongClic
     @BindView(R.id.imgUserProfilePic)
     ImageView imgUserProfilePic;
 
+    @BindView(R.id.textPostCount)
+    TextView textPostCount;
+
+    @BindView(R.id.textFollowerCount)
+    TextView textFollowerCount;
+
+    @BindView(R.id.textFollowingCount)
+    TextView textFollowingCount;
+
     @BindView(R.id.textFirstName)
     EditText textFirstName;
 
@@ -79,6 +90,11 @@ public class AccountProfile extends AppCompatActivity implements View.OnLongClic
     private FirebaseUser user;
     private DatabaseReference databaseReferenceUsers;
     private DatabaseReference currentUserDatabaseReference;
+
+    private DatabaseReference databaseReferencePosts;
+    private DatabaseReference databaseReferenceFollowings;
+    private DatabaseReference userDatabaseReferenceFollowings;
+    private DatabaseReference userDatabaseReferenceFollowers;
 
     private StorageReference storageReference;
 
@@ -107,6 +123,43 @@ public class AccountProfile extends AppCompatActivity implements View.OnLongClic
 
         databaseReferenceUsers = FirebaseDatabase.getInstance().getReference(MyApplication.tbl_USERS);
         databaseReferenceUsers.keepSynced(true);
+
+
+        databaseReferencePosts = FirebaseDatabase.getInstance().getReference(MyApplication.tbl_POSTS);
+        databaseReferencePosts.keepSynced(true);
+
+        databaseReferenceFollowings = FirebaseDatabase.getInstance().getReference(MyApplication.tbl_FOLLOWING);
+        databaseReferenceFollowings.keepSynced(true);
+
+        Query queryFollowings = databaseReferenceFollowings.orderByChild("UID").equalTo(user.getUid());
+
+        queryFollowings.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //TODO
+                textFollowingCount.setText("" + ((int) dataSnapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        Query queryFollowers = databaseReferenceFollowings.orderByChild("FollowUID").equalTo(user.getUid());
+
+        queryFollowers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //TODO
+                textFollowerCount.setText("" + ((int) dataSnapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         currentUserDatabaseReference = databaseReferenceUsers.child(user.getUid());
 
