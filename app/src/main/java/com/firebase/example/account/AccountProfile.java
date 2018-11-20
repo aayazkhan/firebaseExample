@@ -355,7 +355,6 @@ public class AccountProfile extends AppCompatActivity implements View.OnLongClic
 
     @Override
     protected void onDestroy() {
-        unbinder.unbind();
         super.onDestroy();
     }
 

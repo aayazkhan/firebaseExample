@@ -216,7 +216,6 @@ public class SetupAccount extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        unbinder.unbind();
         super.onDestroy();
     }
 }

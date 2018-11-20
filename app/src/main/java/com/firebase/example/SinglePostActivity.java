@@ -173,7 +173,6 @@ public class SinglePostActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        unbinder.unbind();
         super.onDestroy();
     }
 

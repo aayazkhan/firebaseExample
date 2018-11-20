@@ -161,7 +161,6 @@ public class SearchUser extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        unbinder.unbind();
         super.onDestroy();
     }
 }

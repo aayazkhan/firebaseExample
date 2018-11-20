@@ -156,7 +156,7 @@ public class UserProfile extends AppCompatActivity {
 
                             });
 
-                            userDatabaseReferenceFollowings = databaseReferenceFollowings.child(user.getUid() +"|"+ user_id);
+                            userDatabaseReferenceFollowings = databaseReferenceFollowings.child(user.getUid() + "|" + user_id);
 
                             userDatabaseReferenceFollowings.addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -272,7 +272,6 @@ public class UserProfile extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        unbinder.unbind();
         super.onDestroy();
     }
 }

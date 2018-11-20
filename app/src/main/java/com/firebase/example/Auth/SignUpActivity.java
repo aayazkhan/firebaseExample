@@ -166,7 +166,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        unbinder.unbind();
         super.onDestroy();
     }
 
