@@ -63,6 +63,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearLayoutFollower"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -90,6 +91,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearLayoutFollowing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

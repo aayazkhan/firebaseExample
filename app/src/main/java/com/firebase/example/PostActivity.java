@@ -96,7 +96,6 @@ public class PostActivity extends AppCompatActivity {
         recyclerViewPosts.addItemDecoration(new DividerItemDecoration(PostActivity.this, DividerItemDecoration.VERTICAL));
 
 
-
         recyclerAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>
                 (Post.class, R.layout.post_row, PostViewHolder.class, databaseReferencePosts) {
 

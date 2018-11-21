@@ -48,9 +48,10 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import butterknife.Unbinder;
 
-public class AccountProfile extends AppCompatActivity implements View.OnLongClickListener {
+public class AccountProfile extends AppCompatActivity {
 
     public static int GALLERY_REQUEST = 1;
 
@@ -65,8 +66,14 @@ public class AccountProfile extends AppCompatActivity implements View.OnLongClic
     @BindView(R.id.textPostCount)
     TextView textPostCount;
 
+    @BindView(R.id.linearLayoutFollower)
+    LinearLayout linearLayoutFollower;
+
     @BindView(R.id.textFollowerCount)
     TextView textFollowerCount;
+
+    @BindView(R.id.linearLayoutFollowing)
+    LinearLayout linearLayoutFollowing;
 
     @BindView(R.id.textFollowingCount)
     TextView textFollowingCount;
@@ -210,16 +217,11 @@ public class AccountProfile extends AppCompatActivity implements View.OnLongClic
             }
         });
 
-        textFirstName.setOnLongClickListener(this);
-        textLastName.setOnLongClickListener(this);
-        textEmail.setOnLongClickListener(this);
-        textMobile.setOnLongClickListener(this);
-        textGender.setOnLongClickListener(this);
 
     }
 
-    @Override
-    public boolean onLongClick(View v) {
+    @OnLongClick({R.id.textFirstName, R.id.textLastName, R.id.textEmail, R.id.textMobile, R.id.textGender})
+    public boolean onTextLongClick(View v) {
         switch (v.getId()) {
             case R.id.textFirstName:
                 showDialogToUpdate("First Name", strFirstName, "FirstName");
@@ -240,6 +242,18 @@ public class AccountProfile extends AppCompatActivity implements View.OnLongClic
         }
 
         return true;
+    }
+
+    @OnClick(R.id.linearLayoutFollowing)
+    public void onLinearLayoutFollowing() {
+        Intent intent = new Intent(AccountProfile.this, FollowingListActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.linearLayoutFollower)
+    public void onLinearLayoutFollower() {
+        Intent intent = new Intent(AccountProfile.this, FollowerListActivity.class);
+        startActivity(intent);
     }
 
     private void showDialogToUpdate(String title, String value, final String serverVeriableName) {
