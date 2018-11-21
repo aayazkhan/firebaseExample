@@ -55,6 +55,7 @@ public class PostActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener authStateListener;
     private DatabaseReference databaseReferenceUsers;
     private DatabaseReference databaseReferencePosts;
+    private DatabaseReference followingUserDatabaseReferencePosts;
 
     private ProgressDialog progressDialog;
 
@@ -91,6 +92,8 @@ public class PostActivity extends AppCompatActivity {
         recyclerViewPosts.setHasFixedSize(true);
         recyclerViewPosts.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewPosts.addItemDecoration(new DividerItemDecoration(PostActivity.this, DividerItemDecoration.VERTICAL));
+
+        followingUserDatabaseReferencePosts = databaseReferencePosts.orderByChild("UID").getRef();
 
         recyclerAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>
                 (Post.class, R.layout.post_row, PostViewHolder.class, databaseReferencePosts) {
