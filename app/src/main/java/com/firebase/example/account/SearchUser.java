@@ -91,9 +91,9 @@ public class SearchUser extends AppCompatActivity {
                 userViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String USER_KEY = getRef(position).getKey();
+                        String USER_KEY = user.getID();
 
-                        if (user.getUID().equalsIgnoreCase(USER_KEY)) {
+                        if (mAuth.getCurrentUser().getUid().equalsIgnoreCase(USER_KEY)) {
                             Intent intent = new Intent(SearchUser.this, AccountProfile.class);
                             startActivity(intent);
                         } else {
