@@ -31,6 +31,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -55,7 +57,7 @@ public class PostActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener authStateListener;
     private DatabaseReference databaseReferenceUsers;
     private DatabaseReference databaseReferencePosts;
-    private DatabaseReference followingUserDatabaseReferencePosts;
+    private ArrayList<String> followingUserIDs;
 
     private ProgressDialog progressDialog;
 
@@ -93,7 +95,7 @@ public class PostActivity extends AppCompatActivity {
         recyclerViewPosts.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewPosts.addItemDecoration(new DividerItemDecoration(PostActivity.this, DividerItemDecoration.VERTICAL));
 
-        followingUserDatabaseReferencePosts = databaseReferencePosts.orderByChild("UID").getRef();
+
 
         recyclerAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>
                 (Post.class, R.layout.post_row, PostViewHolder.class, databaseReferencePosts) {
