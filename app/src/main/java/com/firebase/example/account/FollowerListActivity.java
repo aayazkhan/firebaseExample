@@ -89,9 +89,14 @@ public class FollowerListActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     User user = new User();
+                                    user.setID(dataSnapshot.child("ID").getValue().toString());
                                     user.setFirstName(dataSnapshot.child("FirstName").getValue().toString());
                                     user.setLastName(dataSnapshot.child("LastName").getValue().toString());
+                                    user.setEmail(dataSnapshot.child("Email").getValue().toString());
+                                    user.setMobile(dataSnapshot.child("Mobile").getValue().toString());
                                     user.setProfilePic(dataSnapshot.child("ProfilePic").getValue().toString());
+                                    user.setUserName(dataSnapshot.child("UserName").getValue().toString());
+                                    user.setUID(dataSnapshot.child("UID").getValue().toString());
 
                                     recyclerViewAdapter.getUsers().add(user);
                                     recyclerViewAdapter.notifyDataSetChanged();

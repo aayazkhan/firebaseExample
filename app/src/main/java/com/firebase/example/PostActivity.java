@@ -9,19 +9,24 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.firebase.example.Auth.LoginActivity;
 import com.firebase.example.account.AccountProfile;
+import com.firebase.example.account.FollowingListActivity;
 import com.firebase.example.account.SearchUser;
 import com.firebase.example.account.SetupAccount;
 import com.firebase.example.account.UserProfile;
 import com.firebase.example.model.Post;
+import com.firebase.example.model.User;
 import com.firebase.example.viewHolder.PostViewHolder;
+import com.firebase.example.viewHolder.UserViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +34,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -51,13 +57,15 @@ public class PostActivity extends AppCompatActivity {
     @BindView(R.id.recyclerViewPosts)
     RecyclerView recyclerViewPosts;
 
-    private FirebaseRecyclerAdapter recyclerAdapter;
+    //private FirebaseRecyclerAdapter recyclerAdapter;
+    private RecyclerViewAdapter recyclerViewAdapter;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private DatabaseReference databaseReferenceUsers;
+    private DatabaseReference databaseReferenceFollowing;
+
     private DatabaseReference databaseReferencePosts;
-    private ArrayList<String> followingUserIDs;
 
     private ProgressDialog progressDialog;
 
@@ -95,7 +103,80 @@ public class PostActivity extends AppCompatActivity {
         recyclerViewPosts.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewPosts.addItemDecoration(new DividerItemDecoration(PostActivity.this, DividerItemDecoration.VERTICAL));
 
+        recyclerViewAdapter = new RecyclerViewAdapter(new ArrayList<Post>());
+        recyclerViewPosts.setAdapter(recyclerViewAdapter);
 
+        databaseReferenceFollowing = FirebaseDatabase.getInstance().getReference(MyApplication.tbl_FOLLOWING);
+
+        Query queryFollowings = databaseReferenceFollowing.orderByChild("UID").equalTo(mAuth.getCurrentUser().getUid());
+
+
+        queryFollowings.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    databaseReferencePosts.orderByChild("UID").equalTo(snapshot.child("FollowUID").getValue().toString())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    for (DataSnapshot snapshotPost : dataSnapshot.getChildren()) {
+                                        final Post post = new Post();
+
+                                        post.setID(snapshot.getKey());
+                                        post.setTitle(snapshot.child("title").getValue().toString());
+                                        post.setDescription(snapshot.child("description").getValue().toString());
+                                        post.setImage_url(snapshot.child("image_url").getValue().toString());
+                                        post.setDatetime(snapshot.child("datetime").getValue().toString());
+                                        post.setUID(snapshot.child("").getValue().toString());
+
+                                        databaseReferenceUsers.child(post.getUID()).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                User user = new User();
+
+                                                user.setID(dataSnapshot.child("ID").getValue().toString());
+                                                user.setFirstName(dataSnapshot.child("FirstName").getValue().toString());
+                                                user.setLastName(dataSnapshot.child("LastName").getValue().toString());
+                                                user.setEmail(dataSnapshot.child("Email").getValue().toString());
+                                                user.setMobile(dataSnapshot.child("Mobile").getValue().toString());
+                                                user.setProfilePic(dataSnapshot.child("ProfilePic").getValue().toString());
+                                                user.setUserName(dataSnapshot.child("UserName").getValue().toString());
+                                                user.setUID(dataSnapshot.child("UID").getValue().toString());
+
+                                                post.setUser(user);
+
+                                                recyclerViewAdapter.getPosts().add(post);
+                                                recyclerViewAdapter.notifyDataSetChanged();
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+/*
         recyclerAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>
                 (Post.class, R.layout.post_row, PostViewHolder.class, databaseReferencePosts) {
 
@@ -170,6 +251,7 @@ public class PostActivity extends AppCompatActivity {
         };
 
         recyclerViewPosts.setAdapter(recyclerAdapter);
+*/
 
     }
 
@@ -287,5 +369,76 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public class RecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolder> {
+
+        private ArrayList<Post> posts;
+
+        public RecyclerViewAdapter(ArrayList<Post> posts) {
+
+            this.posts = posts;
+
+        }
+
+        public ArrayList<Post> getPosts() {
+            return posts;
+        }
+
+        @Override
+        public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.post_row, parent, false);
+
+            PostViewHolder postViewHolder = new PostViewHolder(itemView);
+
+            return postViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(PostViewHolder postViewHolder, int position) {
+            final Post post = posts.get(position);
+
+            postViewHolder.setImage(PostActivity.this, post.getImage_url());
+            postViewHolder.setTitle(post.getTitle());
+            postViewHolder.setDescription(post.getDescription());
+
+            postViewHolder.setUserNameImage(PostActivity.this, post.getUser().getProfilePic());
+            postViewHolder.setUserName(post.getUser().getUserName());
+
+
+            postViewHolder.getItemView().findViewById(R.id.linearLayoutUser).setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+
+                    if (post.getUser().getUID().equalsIgnoreCase(mAuth.getCurrentUser().getUid())) {
+
+                        Intent intent = new Intent(PostActivity.this, AccountProfile.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(PostActivity.this, UserProfile.class);
+                        intent.putExtra("user_id", post.getUser().getUID());
+                        startActivity(intent);
+                    }
+                }
+            });
+
+            postViewHolder.getItemView().findViewById(R.id.linearLayoutPost).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent(PostActivity.this, SinglePostActivity.class);
+                    intent.putExtra("post_id", post.getID());
+                    startActivity(intent);
+                }
+            });
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return 0;
+        }
     }
 }

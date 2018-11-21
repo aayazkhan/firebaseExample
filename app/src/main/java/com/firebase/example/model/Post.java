@@ -5,21 +5,33 @@ import java.io.Serializable;
 
 public class Post implements Serializable {
 
+    private String ID;
     private String title;
     private String description;
     private String image_url;
+    private String datetime;
     private String UID;
-    private String  userName;
+    private User user;
 
     public Post() {
     }
 
-    public Post(String title, String description, String image_url, String UID, String userName) {
+    public Post(String ID, String title, String description, String image_url, String datetime, String UID, User user) {
+        this.ID = ID;
         this.title = title;
         this.description = description;
         this.image_url = image_url;
+        this.datetime = datetime;
         this.UID = UID;
-        this.userName = userName;
+        this.user = user;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public String getTitle() {
@@ -46,6 +58,14 @@ public class Post implements Serializable {
         this.image_url = image_url;
     }
 
+    public String getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
+    }
+
     public String getUID() {
         return UID;
     }
@@ -54,11 +74,12 @@ public class Post implements Serializable {
         this.UID = UID;
     }
 
-    public String getUserName() {
-        return userName;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUser(User user) {
+        this.user = user;
     }
+
 }

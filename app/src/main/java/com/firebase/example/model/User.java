@@ -9,12 +9,12 @@ public class User {
 
     public User(String ID, String firstName, String lastName, String email, String mobile, String profilePic, String userName, String UID) {
         this.ID = ID;
-        FirstName = firstName;
-        LastName = lastName;
-        Email = email;
-        Mobile = mobile;
-        ProfilePic = profilePic;
-        UserName = userName;
+        this.FirstName = firstName;
+        this.LastName = lastName;
+        this.Email = email;
+        this.Mobile = mobile;
+        this.ProfilePic = profilePic;
+        this.UserName = userName;
         this.UID = UID;
     }
 
