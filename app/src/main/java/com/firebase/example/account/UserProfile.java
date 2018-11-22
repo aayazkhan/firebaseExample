@@ -251,8 +251,8 @@ public class UserProfile extends AppCompatActivity {
 
         if (textFollowerFollowing.getText().toString().equalsIgnoreCase("follow")) {
 
-            userDatabaseReferenceFollowings.child("UID").setValue(user.getUid());
             userDatabaseReferenceFollowings.child("FollowUID").setValue(user_id);
+            userDatabaseReferenceFollowings.child("UID").setValue(user.getUid());
             userDatabaseReferenceFollowings.child("datetime").setValue(simpleDateFormat.format(new Date()));
 
         } else {

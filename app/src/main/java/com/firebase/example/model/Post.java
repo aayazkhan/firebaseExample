@@ -1,9 +1,11 @@
 package com.firebase.example.model;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
 
-public class Post implements Serializable {
+public class Post implements Comparable<Post>, Serializable {
 
     private String ID;
     private String title;
@@ -82,4 +84,9 @@ public class Post implements Serializable {
         this.user = user;
     }
 
+
+    @Override
+    public int compareTo(Post post) {
+        return post.getDatetime().compareTo(getDatetime());
+    }
 }

@@ -39,6 +39,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -112,100 +113,97 @@ public class PostActivity extends AppCompatActivity {
         if (mAuth.getCurrentUser() != null) {
             Query queryFollowings = databaseReferenceFollowing.orderByChild("UID").equalTo(mAuth.getCurrentUser().getUid());
 
-            queryFollowings.addValueEventListener(new ValueEventListener() {
+            queryFollowings.addChildEventListener(new ChildEventListener() {
 
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     try {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            databaseReferencePosts.orderByChild("UID").equalTo(snapshot.child("FollowUID").getValue().toString())
-                                    .addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                        databaseReferencePosts.orderByChild("UID").equalTo(dataSnapshot.child("FollowUID").getValue().toString())
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                            try {
+                                        try {
 
-                                                for (DataSnapshot snapshotPost : dataSnapshot.getChildren()) {
-                                                    final Post post = new Post();
+                                            for (DataSnapshot snapshotPost : dataSnapshot.getChildren()) {
+                                                final Post post = new Post();
 
-                                                    post.setID(snapshotPost.getKey());
-                                                    post.setTitle(snapshotPost.child("title").getValue().toString());
-                                                    post.setDescription(snapshotPost.child("description").getValue().toString());
-                                                    post.setImage_url(snapshotPost.child("image_url").getValue().toString());
-                                                    post.setDatetime(snapshotPost.child("datetime").getValue().toString());
-                                                    post.setUID(snapshotPost.child("UID").getValue().toString());
+                                                post.setID(snapshotPost.getKey());
+                                                post.setTitle(snapshotPost.child("title").getValue().toString());
+                                                post.setDescription(snapshotPost.child("description").getValue().toString());
+                                                post.setImage_url(snapshotPost.child("image_url").getValue().toString());
+                                                post.setDatetime(snapshotPost.child("datetime").getValue().toString());
+                                                post.setUID(snapshotPost.child("UID").getValue().toString());
 
-                                                    databaseReferenceUsers.child(post.getUID()).addValueEventListener(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                                            User user = new User();
+                                                databaseReferenceUsers.child(post.getUID()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        User user = new User();
 
-                                                            user.setID(dataSnapshot.child("ID").getValue().toString());
-                                                            user.setFirstName(dataSnapshot.child("FirstName").getValue().toString());
-                                                            user.setLastName(dataSnapshot.child("LastName").getValue().toString());
-                                                            user.setEmail(dataSnapshot.child("Email").getValue().toString());
-                                                            user.setMobile(dataSnapshot.child("Mobile").getValue().toString());
-                                                            user.setProfilePic(dataSnapshot.child("ProfilePic").getValue().toString());
-                                                            user.setUserName(dataSnapshot.child("UserName").getValue().toString());
-                                                            user.setUID(dataSnapshot.child("UID").getValue().toString());
+                                                        user.setID(dataSnapshot.child("ID").getValue().toString());
+                                                        user.setFirstName(dataSnapshot.child("FirstName").getValue().toString());
+                                                        user.setLastName(dataSnapshot.child("LastName").getValue().toString());
+                                                        user.setEmail(dataSnapshot.child("Email").getValue().toString());
+                                                        user.setMobile(dataSnapshot.child("Mobile").getValue().toString());
+                                                        user.setProfilePic(dataSnapshot.child("ProfilePic").getValue().toString());
+                                                        user.setUserName(dataSnapshot.child("UserName").getValue().toString());
+                                                        user.setUID(dataSnapshot.child("UID").getValue().toString());
 
-                                                            post.setUser(user);
+                                                        post.setUser(user);
 
-                                                            recyclerViewAdapter.getPosts().add(post);
-                                                            recyclerViewAdapter.notifyDataSetChanged();
-                                                        }
+                                                        recyclerViewAdapter.getPosts().add(post);
+                                                        Collections.sort(recyclerViewAdapter.getPosts());
+                                                        recyclerViewAdapter.notifyDataSetChanged();
+                                                    }
 
-                                                        @Override
-                                                        public void onCancelled(DatabaseError databaseError) {
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
 
-                                                        }
-                                                    });
-                                                }
-
-                                            } catch (Exception e) {
-                                                System.out.println(e);
+                                                    }
+                                                });
                                             }
+
+                                        } catch (Exception e) {
+                                            System.out.println("Exception:" + e);
                                         }
+                                    }
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                        }
-                                    });
-                        }
+                                    }
+                                });
 
-                    } catch (
-                            Exception e) {
-                        System.out.println(e);
+                    } catch (Exception e) {
+                        System.out.println("Exception:" + e);
                     }
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-            queryFollowings.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                    System.out.println(dataSnapshot);
                 }
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    try {
 
+                        String followUID = dataSnapshot.child("FollowUID").getValue().toString();
+
+                        for (int i = 0; i < recyclerViewAdapter.getPosts().size(); i++) {
+                            if (recyclerViewAdapter.getPosts().get(i).getUID().equalsIgnoreCase(followUID)) {
+                                recyclerViewAdapter.getPosts().remove(i--);
+                            }
+                        }
+                        recyclerViewAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        System.out.println("Exception:" + e);
+                    }
                 }
 
                 @Override
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                    System.out.println(dataSnapshot);
                 }
 
                 @Override
@@ -214,7 +212,6 @@ public class PostActivity extends AppCompatActivity {
                 }
             });
 
-            recyclerViewPosts.setAdapter(recyclerViewAdapter);
         }
 
 /*
