@@ -158,77 +158,6 @@ public class UserProfile extends AppCompatActivity {
 
                             });
 
-                            userDatabaseReferenceFollowings = databaseReferenceFollowings.child(user.getUid() + "|" + user_id);
-
-                            userDatabaseReferenceFollowings.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                    if (dataSnapshot.getChildrenCount() > 0) {
-                                        textFollowerFollowing.setText("Un follow");
-                                    } else {
-                                        textFollowerFollowing.setText("follow");
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-
-
-                            Query queryUserPost = databaseReferencePosts.orderByChild("UID").equalTo(user_id);
-
-                            queryUserPost.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    postCount = (int) dataSnapshot.getChildrenCount();
-                                    textPostCount.setText("" + postCount);
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-
-                            adapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(
-                                    Post.class, R.layout.post_row, PostViewHolder.class, queryUserPost) {
-
-                                @Override
-                                protected void populateViewHolder(PostViewHolder viewHolder, Post post, final int position) {
-
-
-                                    viewHolder.setTitleVisibility(View.GONE);
-                                    viewHolder.setDescriptionVisibility(View.GONE);
-                                    viewHolder.setUserNameVisibility(View.GONE);
-                                    viewHolder.setUserNameImageVisibility(View.GONE);
-
-                                    viewHolder.setImage(UserProfile.this, post.getImage_url());
-
-                                    viewHolder.getItemView().getLayoutParams().width = devicewidth;
-                                    viewHolder.getItemView().getLayoutParams().height = devicewidth;
-
-                                    viewHolder.getItemView().setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-
-                                            String POST_KEY = getRef(position).getKey();
-
-                                            Intent intent = new Intent(UserProfile.this, SinglePostActivity.class);
-                                            intent.putExtra("post_id", POST_KEY);
-                                            startActivity(intent);
-
-                                        }
-                                    });
-
-                                }
-                            };
-
-                            userPostList.setAdapter(adapter);
-
-
                         } catch (Exception e) {
                             System.out.println(e);
                         }
@@ -239,6 +168,80 @@ public class UserProfile extends AppCompatActivity {
 
                     }
                 });
+
+
+                if (user.getUid().equalsIgnoreCase(user_id)) {
+                    textFollowerFollowing.setText("edit");
+                } else {
+                    userDatabaseReferenceFollowings = databaseReferenceFollowings.child(user.getUid() + "|" + user_id);
+
+                    userDatabaseReferenceFollowings.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            if (dataSnapshot.getChildrenCount() > 0) {
+                                textFollowerFollowing.setText("Un follow");
+                            } else {
+                                textFollowerFollowing.setText("follow");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+                Query queryUserPost = databaseReferencePosts.orderByChild("UID").equalTo(user_id);
+
+                queryUserPost.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        postCount = (int) dataSnapshot.getChildrenCount();
+                        textPostCount.setText("" + postCount);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                adapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(
+                        Post.class, R.layout.post_row, PostViewHolder.class, queryUserPost) {
+
+                    @Override
+                    protected void populateViewHolder(PostViewHolder viewHolder, Post post, final int position) {
+
+
+                        viewHolder.setTitleVisibility(View.GONE);
+                        viewHolder.setDescriptionVisibility(View.GONE);
+                        viewHolder.setUserNameVisibility(View.GONE);
+                        viewHolder.setUserNameImageVisibility(View.GONE);
+
+                        viewHolder.setImage(UserProfile.this, post.getImage_url());
+
+                        viewHolder.getItemView().getLayoutParams().width = devicewidth;
+                        viewHolder.getItemView().getLayoutParams().height = devicewidth;
+
+                        viewHolder.getItemView().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                String POST_KEY = getRef(position).getKey();
+
+                                Intent intent = new Intent(UserProfile.this, SinglePostActivity.class);
+                                intent.putExtra("post_id", POST_KEY);
+                                startActivity(intent);
+
+                            }
+                        });
+
+                    }
+                };
+
+                userPostList.setAdapter(adapter);
 
             }
         }
@@ -255,8 +258,10 @@ public class UserProfile extends AppCompatActivity {
             userDatabaseReferenceFollowings.child("UID").setValue(user.getUid());
             userDatabaseReferenceFollowings.child("datetime").setValue(simpleDateFormat.format(new Date()));
 
-        } else {
+        } else if (textFollowerFollowing.getText().toString().equalsIgnoreCase("Un follow")) {
             userDatabaseReferenceFollowings.removeValue();
+        } else {
+            startActivity(new Intent(UserProfile.this, AccountProfile.class));
         }
 
     }

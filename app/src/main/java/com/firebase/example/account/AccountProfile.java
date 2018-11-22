@@ -63,9 +63,6 @@ public class AccountProfile extends AppCompatActivity {
     @BindView(R.id.imgUserProfilePic)
     ImageView imgUserProfilePic;
 
-    @BindView(R.id.textPostCount)
-    TextView textPostCount;
-
     @BindView(R.id.linearLayoutFollower)
     LinearLayout linearLayoutFollower;
 

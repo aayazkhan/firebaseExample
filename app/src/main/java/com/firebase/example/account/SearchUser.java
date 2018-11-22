@@ -93,14 +93,9 @@ public class SearchUser extends AppCompatActivity {
                     public void onClick(View v) {
                         String USER_KEY = user.getID();
 
-                        if (mAuth.getCurrentUser().getUid().equalsIgnoreCase(USER_KEY)) {
-                            Intent intent = new Intent(SearchUser.this, AccountProfile.class);
-                            startActivity(intent);
-                        } else {
-                            Intent intent = new Intent(SearchUser.this, UserProfile.class);
-                            intent.putExtra("user_id", USER_KEY);
-                            startActivity(intent);
-                        }
+                        Intent intent = new Intent(SearchUser.this, UserProfile.class);
+                        intent.putExtra("user_id", USER_KEY);
+                        startActivity(intent);
                     }
                 });
             }

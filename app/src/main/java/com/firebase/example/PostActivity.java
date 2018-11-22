@@ -214,83 +214,6 @@ public class PostActivity extends AppCompatActivity {
 
         }
 
-/*
-        recyclerAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>
-                (Post.class, R.layout.post_row, PostViewHolder.class, databaseReferencePosts) {
-
-            @Override
-            protected void populateViewHolder(final PostViewHolder postViewHolder, Post post, final int position) {
-                postViewHolder.setImage(PostActivity.this, post.getImage_url());
-                postViewHolder.setTitle(post.getTitle());
-                postViewHolder.setDescription(post.getDescription());
-
-                DatabaseReference userDatabaseReference = databaseReferenceUsers.child(post.getUID());
-
-                userDatabaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        String userName = dataSnapshot.child("UserName").getValue().toString();
-                        String profilePic = dataSnapshot.child("ProfilePic").getValue().toString();
-
-                        postViewHolder.setUserNameImage(PostActivity.this, profilePic);
-                        postViewHolder.setUserName(userName);
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-                postViewHolder.getItemView().findViewById(R.id.linearLayoutUser).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final DatabaseReference databaseReference = getRef(position);
-
-                        databaseReference.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                String user_id = dataSnapshot.child("UID").getValue().toString();
-
-                                if (mAuth.getCurrentUser().getUid().equalsIgnoreCase(user_id)) {
-                                    Intent intent = new Intent(PostActivity.this, AccountProfile.class);
-                                    startActivity(intent);
-                                } else {
-                                    Intent intent = new Intent(PostActivity.this, UserProfile.class);
-                                    intent.putExtra("user_id", user_id);
-                                    startActivity(intent);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                });
-
-                postViewHolder.getItemView().findViewById(R.id.linearLayoutPost).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        String POST_KEY = getRef(position).getKey();
-
-                        Intent intent = new Intent(PostActivity.this, SinglePostActivity.class);
-                        intent.putExtra("post_id", POST_KEY);
-                        startActivity(intent);
-                    }
-                });
-            }
-
-        };
-
-        recyclerViewPosts.setAdapter(recyclerAdapter);
-*/
-
     }
 
     @Override
@@ -370,7 +293,8 @@ public class PostActivity extends AppCompatActivity {
         }
 
         if (R.id.action_profile == item.getItemId()) {
-            Intent intent = new Intent(PostActivity.this, AccountProfile.class);
+            Intent intent = new Intent(PostActivity.this, UserProfile.class);
+            intent.putExtra("user_id", mAuth.getCurrentUser().getUid());
             startActivityForResult(intent, PROFILE);
         }
 
@@ -449,15 +373,9 @@ public class PostActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    if (post.getUser().getUID().equalsIgnoreCase(mAuth.getCurrentUser().getUid())) {
-
-                        Intent intent = new Intent(PostActivity.this, AccountProfile.class);
-                        startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(PostActivity.this, UserProfile.class);
-                        intent.putExtra("user_id", post.getUser().getUID());
-                        startActivity(intent);
-                    }
+                    Intent intent = new Intent(PostActivity.this, UserProfile.class);
+                    intent.putExtra("user_id", post.getUser().getUID());
+                    startActivity(intent);
                 }
             });
 
