@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,6 +25,7 @@ import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class SinglePostActivity extends AppCompatActivity {
@@ -46,10 +50,12 @@ public class SinglePostActivity extends AppCompatActivity {
     @BindView(R.id.textPostDescription)
     TextView textPostDescription;
 
+    @BindView(R.id.btnSubmit)
+    Button btnSubmit;
+
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private DatabaseReference databaseReferenceUsers;
-    private DatabaseReference currentUserDatabaseReference;
     private DatabaseReference postUserDatabaseReference;
 
     private DatabaseReference databaseReferencePosts;
@@ -74,8 +80,6 @@ public class SinglePostActivity extends AppCompatActivity {
         databaseReferenceUsers = FirebaseDatabase.getInstance().getReference(MyApplication.tbl_USERS);
         databaseReferenceUsers.keepSynced(true);
 
-        currentUserDatabaseReference = databaseReferenceUsers.child(user.getUid());
-
         databaseReferencePosts = FirebaseDatabase.getInstance().getReference(MyApplication.tbl_POSTS);
         databaseReferencePosts.keepSynced(true);
 
@@ -88,7 +92,7 @@ public class SinglePostActivity extends AppCompatActivity {
                 String post_id = savedInstanceState.getString("post_id");
                 currentPostDatabaseReference = databaseReferencePosts.child(post_id);
 
-                currentPostDatabaseReference.addValueEventListener(new ValueEventListener() {
+                currentPostDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -116,7 +120,7 @@ public class SinglePostActivity extends AppCompatActivity {
 
                         postUserDatabaseReference = databaseReferenceUsers.child(postUid);
 
-                        postUserDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        postUserDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -146,6 +150,11 @@ public class SinglePostActivity extends AppCompatActivity {
                             }
                         });
 
+                        if (user.getUid().equalsIgnoreCase(postUid)) {
+                            btnSubmit.setVisibility(View.VISIBLE);
+                        } else {
+                            btnSubmit.setVisibility(View.GONE);
+                        }
 
                     }
 
@@ -154,11 +163,15 @@ public class SinglePostActivity extends AppCompatActivity {
 
                     }
                 });
-
             }
-
         }
+    }
 
+    @OnClick(R.id.btnSubmit)
+    public void onBtnSubmit() {
+        currentPostDatabaseReference.removeValue();
+        Toast.makeText(SinglePostActivity.this, "Deleted.", Toast.LENGTH_LONG).show();
+        finish();
     }
 
     @Override
