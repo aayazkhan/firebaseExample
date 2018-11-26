@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -13,22 +12,24 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="15dp"
-        android:orientation="vertical">
+        android:layout_below="@+id/toolbar"
+        android:layout_margin="10dp">
 
         <ImageView
             android:id="@+id/imgUserProfilePic"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
             android:src="@mipmap/user_image" />
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutFirstName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imgUserProfilePic">
 
             <EditText
                 android:id="@+id/textFirstName"
@@ -39,8 +40,10 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutLastName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textInputLayoutFirstName">
 
             <EditText
                 android:id="@+id/textLastName"
@@ -51,8 +54,10 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutEmail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textInputLayoutLastName">
 
             <EditText
                 android:id="@+id/textEmail"
@@ -65,8 +70,10 @@
 
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutMobile"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textInputLayoutEmail">
 
             <EditText
                 android:id="@+id/textMobile"
@@ -78,8 +85,10 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textInputLayoutMobile">
 
             <EditText
                 android:id="@+id/textPassword"
@@ -92,20 +101,27 @@
 
         <Button
             android:id="@+id/btnSubmit"
-            android:layout_width="match_parent"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_background"
-            android:text="SIGN UP"
-            android:textColor="@color/colorAccent" />
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textInputLayoutPassword"
+            android:layout_marginTop="15dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="SIGN UP" />
 
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:text="LOGIN"
-            android:textColor="@color/colorAccent" />
+    </RelativeLayout>
 
-    </LinearLayout>
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@null"
+        android:padding="10dp"
+        android:text="LOGIN"
+        android:textColor="@color/colorAccent" />
 
-</LinearLayout>
+</RelativeLayout>
