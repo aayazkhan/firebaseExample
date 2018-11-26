@@ -20,7 +20,8 @@
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
                                       <entry key="iconShape" value="NONE" />
-                                      <entry key="imageAsset" value="D:\aayaz\Desktop\photo-camera.png" />
+                                      <entry key="imageAsset" value="D:\aayaz\Desktop\chat-comment-oval-speech-bubble-with-text-lines.png" />
+                                      <entry key="outputName" value="simple_chat" />
                                     </map>
                                   </option>
                                 </PersistentState>
