@@ -220,7 +220,7 @@ public class UserProfile extends AppCompatActivity {
                         viewHolder.setUserNameVisibility(View.GONE);
                         viewHolder.setUserNameImageVisibility(View.GONE);
 
-                        viewHolder.setImage(UserProfile.this, post.getImage_url());
+                        viewHolder.setImage(post.getImage_url());
 
                         viewHolder.getItemView().getLayoutParams().width = devicewidth;
                         viewHolder.getItemView().getLayoutParams().height = devicewidth;

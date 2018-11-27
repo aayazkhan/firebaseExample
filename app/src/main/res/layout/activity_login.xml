@@ -58,14 +58,12 @@
 
         <Button
             android:id="@+id/btnSubmit"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/textInputLayoutPassword"
             android:layout_marginTop="15dp"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
             android:text="LOGIN"
             android:textSize="18sp"
             android:textStyle="bold" />

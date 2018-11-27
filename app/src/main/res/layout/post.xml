@@ -3,26 +3,8 @@
     android:id="@+id/linearLayoutPost"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
     android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/textPostTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Title goes hear ..."
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:textSize="16dp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textPostDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Description goes hear ..."
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" />
 
     <ImageView
         android:id="@+id/imgViewtPostImage"
@@ -44,6 +26,7 @@
             android:id="@+id/imgViewLike"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:adjustViewBounds="true"
             android:padding="10dp"
             android:src="@mipmap/simple_heart" />
 
@@ -51,10 +34,21 @@
             android:id="@+id/imgViewComment"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:adjustViewBounds="true"
             android:padding="10dp"
             android:src="@mipmap/simple_comment" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textPostTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Title goes hear ..."
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textSize="16dp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewLike"
@@ -65,11 +59,15 @@
         android:textSize="16dp"
         android:textStyle="bold" />
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list"
+    <TextView
+        android:id="@+id/textPostDescription"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:hint="Description goes hear ..."
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
+
 
 </LinearLayout>
 

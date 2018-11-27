@@ -22,6 +22,7 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +51,15 @@ public class SinglePostActivity extends AppCompatActivity {
     @BindView(R.id.textPostDescription)
     TextView textPostDescription;
 
+    @BindView(R.id.imgViewLike)
+    ImageView imageViewLike;
+
+    @BindView(R.id.imgViewComment)
+    ImageView imageViewComment;
+
+    @BindView(R.id.textViewLike)
+    TextView textViewLike;
+
     @BindView(R.id.btnSubmit)
     Button btnSubmit;
 
@@ -60,6 +70,10 @@ public class SinglePostActivity extends AppCompatActivity {
 
     private DatabaseReference databaseReferencePosts;
     private DatabaseReference currentPostDatabaseReference;
+
+    private String post_id;
+    private boolean like;
+    private long likeCount = 0;
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
@@ -89,7 +103,7 @@ public class SinglePostActivity extends AppCompatActivity {
 
             if (savedInstanceState.containsKey("post_id")) {
 
-                String post_id = savedInstanceState.getString("post_id");
+                post_id = savedInstanceState.getString("post_id");
                 currentPostDatabaseReference = databaseReferencePosts.child(post_id);
 
                 currentPostDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -104,6 +118,20 @@ public class SinglePostActivity extends AppCompatActivity {
 
                         textPostTitle.setText(postTitle);
                         textPostDescription.setText(postDesc);
+
+                        DataSnapshot snapshotPostLike = dataSnapshot.child("/" + MyApplication.tbl_POST_LIKE);
+
+                        like = snapshotPostLike.hasChild(user.getUid());
+
+                        if (like) {
+                            imageViewLike.setImageDrawable(getResources().getDrawable(R.mipmap.color_heart));
+                        } else {
+                            imageViewLike.setImageDrawable(getResources().getDrawable(R.mipmap.simple_heart));
+                        }
+
+                        likeCount = snapshotPostLike.getChildrenCount();
+
+                        textViewLike.setText(likeCount + " likes");
 
                         Picasso.with(SinglePostActivity.this).load(postImage_url).networkPolicy(NetworkPolicy.OFFLINE).into(imgViewtPostImage, new Callback() {
 
@@ -165,6 +193,24 @@ public class SinglePostActivity extends AppCompatActivity {
                 });
             }
         }
+    }
+
+    @OnClick(R.id.imgViewLike)
+    public void onImgViewLike() {
+        DatabaseReference databaseReferencePostLike = databaseReferencePosts.child(post_id + "/" + MyApplication.tbl_POST_LIKE);
+        if (like) {
+            imageViewLike.setImageDrawable(getResources().getDrawable(R.mipmap.simple_heart));
+            like = false;
+            databaseReferencePostLike.child(user.getUid()).removeValue();
+            likeCount = likeCount - 1;
+        } else {
+            imageViewLike.setImageDrawable(getResources().getDrawable(R.mipmap.color_heart));
+            like = true;
+            databaseReferencePostLike.child(user.getUid()).setValue(simpleDateFormat.format(new Date()));
+            likeCount = likeCount + 1;
+        }
+
+        textViewLike.setText(likeCount + " likes");
     }
 
     @OnClick(R.id.btnSubmit)

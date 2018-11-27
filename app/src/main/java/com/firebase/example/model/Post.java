@@ -14,18 +14,11 @@ public class Post implements Comparable<Post>, Serializable {
     private String datetime;
     private String UID;
     private User user;
+    private boolean like = false;
+
+    private long likeCount = 0;
 
     public Post() {
-    }
-
-    public Post(String ID, String title, String description, String image_url, String datetime, String UID, User user) {
-        this.ID = ID;
-        this.title = title;
-        this.description = description;
-        this.image_url = image_url;
-        this.datetime = datetime;
-        this.UID = UID;
-        this.user = user;
     }
 
     public String getID() {
@@ -84,9 +77,25 @@ public class Post implements Comparable<Post>, Serializable {
         this.user = user;
     }
 
+    public boolean isLike() {
+        return like;
+    }
+
+    public void setLike(boolean like) {
+        this.like = like;
+    }
+
+    public long getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(long likeCount) {
+        this.likeCount = likeCount;
+    }
 
     @Override
     public int compareTo(Post post) {
         return post.getDatetime().compareTo(getDatetime());
     }
+
 }

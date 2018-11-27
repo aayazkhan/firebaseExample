@@ -38,8 +38,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,6 +65,7 @@ public class PostActivity extends AppCompatActivity {
     private RecyclerViewAdapter recyclerViewAdapter;
 
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
     private FirebaseAuth.AuthStateListener authStateListener;
     private DatabaseReference databaseReferenceUsers;
     private DatabaseReference databaseReferenceFollowing;
@@ -70,6 +73,8 @@ public class PostActivity extends AppCompatActivity {
     private DatabaseReference databaseReferencePosts;
 
     private ProgressDialog progressDialog;
+
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +88,7 @@ public class PostActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
 
         mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
         databaseReferenceUsers = FirebaseDatabase.getInstance().getReference(MyApplication.tbl_USERS);
         databaseReferenceUsers.keepSynced(true);
 
@@ -110,8 +116,8 @@ public class PostActivity extends AppCompatActivity {
         recyclerViewAdapter = new RecyclerViewAdapter(new ArrayList<Post>());
         recyclerViewPosts.setAdapter(recyclerViewAdapter);
 
-        if (mAuth.getCurrentUser() != null) {
-            Query queryFollowings = databaseReferenceFollowing.orderByChild("UID").equalTo(mAuth.getCurrentUser().getUid());
+        if (user != null) {
+            Query queryFollowings = databaseReferenceFollowing.orderByChild("UID").equalTo(user.getUid());
 
             queryFollowings.addChildEventListener(new ChildEventListener() {
 
@@ -134,6 +140,12 @@ public class PostActivity extends AppCompatActivity {
                                                 post.setImage_url(snapshotPost.child("image_url").getValue().toString());
                                                 post.setDatetime(snapshotPost.child("datetime").getValue().toString());
                                                 post.setUID(snapshotPost.child("UID").getValue().toString());
+
+
+                                                DataSnapshot snapshotPostLike = dataSnapshot.child(post.getID() + "/" + MyApplication.tbl_POST_LIKE);
+
+                                                post.setLike(snapshotPostLike.hasChild(user.getUid()));
+                                                post.setLikeCount(snapshotPostLike.getChildrenCount());
 
                                                 databaseReferenceUsers.child(post.getUID()).addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
@@ -187,7 +199,6 @@ public class PostActivity extends AppCompatActivity {
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     try {
-
                         String followUID = dataSnapshot.child("FollowUID").getValue().toString();
 
                         for (int i = 0; i < recyclerViewAdapter.getPosts().size(); i++) {
@@ -223,8 +234,7 @@ public class PostActivity extends AppCompatActivity {
         checkUserExist();
 
         mAuth.addAuthStateListener(authStateListener);
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        updateUI(user);
 
     }
 
@@ -235,8 +245,6 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void checkUserExist() {
-
-        final FirebaseUser user = mAuth.getCurrentUser();
 
         if (user != null) {
 
@@ -294,7 +302,7 @@ public class PostActivity extends AppCompatActivity {
 
         if (R.id.action_profile == item.getItemId()) {
             Intent intent = new Intent(PostActivity.this, UserProfile.class);
-            intent.putExtra("user_id", mAuth.getCurrentUser().getUid());
+            intent.putExtra("user_id", user.getUid());
             startActivityForResult(intent, PROFILE);
         }
 
@@ -335,12 +343,12 @@ public class PostActivity extends AppCompatActivity {
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
+        private DatabaseReference databaseReferencePostLike;
+
         private ArrayList<Post> posts;
 
         public RecyclerViewAdapter(ArrayList<Post> posts) {
-
             this.posts = posts;
-
         }
 
         public ArrayList<Post> getPosts() {
@@ -352,23 +360,23 @@ public class PostActivity extends AppCompatActivity {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.post_row, parent, false);
 
-            PostViewHolder postViewHolder = new PostViewHolder(itemView);
+            PostViewHolder postViewHolder = new PostViewHolder(PostActivity.this, itemView);
 
             return postViewHolder;
         }
 
         @Override
-        public void onBindViewHolder(PostViewHolder postViewHolder, int position) {
+        public void onBindViewHolder(final PostViewHolder postViewHolder, int position) {
             final Post post = posts.get(position);
 
-            postViewHolder.setImage(PostActivity.this, post.getImage_url());
+            postViewHolder.setImage(post.getImage_url());
             postViewHolder.setTitle(post.getTitle());
             postViewHolder.setDescription(post.getDescription());
 
-            postViewHolder.setUserNameImage(PostActivity.this, post.getUser().getProfilePic());
+            postViewHolder.setUserNameImage(post.getUser().getProfilePic());
             postViewHolder.setUserName(post.getUser().getUserName());
 
-            postViewHolder.getItemView().findViewById(R.id.linearLayoutUser).setOnClickListener(new View.OnClickListener() {
+            postViewHolder.getLinearLayoutUser().setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -379,13 +387,37 @@ public class PostActivity extends AppCompatActivity {
                 }
             });
 
-            postViewHolder.getItemView().findViewById(R.id.linearLayoutPost).setOnClickListener(new View.OnClickListener() {
+            postViewHolder.getLinearLayoutPost().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     Intent intent = new Intent(PostActivity.this, SinglePostActivity.class);
                     intent.putExtra("post_id", post.getID());
                     startActivity(intent);
+                }
+            });
+
+            postViewHolder.setImageViewLike(post.isLike());
+            postViewHolder.setLikeCount(post.getLikeCount());
+
+            postViewHolder.getImageViewLike().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    databaseReferencePostLike = databaseReferencePosts.child(post.getID() + "/" + MyApplication.tbl_POST_LIKE);
+                    if (post.isLike()) {
+                        postViewHolder.setImageViewLike(false);
+                        post.setLike(false);
+                        databaseReferencePostLike.child(user.getUid()).removeValue();
+                        post.setLikeCount(post.getLikeCount() - 1);
+                    } else {
+                        postViewHolder.setImageViewLike(true);
+                        post.setLike(true);
+                        databaseReferencePostLike.child(user.getUid()).setValue(simpleDateFormat.format(new Date()));
+                        post.setLikeCount(post.getLikeCount() + 1);
+                    }
+                    postViewHolder.setLikeCount(post.getLikeCount());
+
                 }
             });
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.example.R;
@@ -19,11 +20,16 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
 
     private View itemView;
     private ImageView imageViewPostImage, imgViewtUserImage;
-    private TextView textUserName, textTitle, textDescription;
+    private TextView textUserName, textTitle, textDescription, textViewLike;
 
+    private LinearLayout linearLayoutUser, linearLayoutPost;
 
-    public PostViewHolder(View itemView) {
+    private ImageView imageViewLike, imageViewComment;
+    private Context context;
+
+    public PostViewHolder(Context context, View itemView) {
         super(itemView);
+        this.context = context;
         this.itemView = itemView;
 
         imgViewtUserImage = (ImageView) itemView.findViewById(R.id.imgViewtUserImage);
@@ -33,33 +39,20 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         textTitle = (TextView) itemView.findViewById(R.id.textPostTitle);
         textDescription = (TextView) itemView.findViewById(R.id.textPostDescription);
 
+        imageViewLike = (ImageView) itemView.findViewById(R.id.imgViewLike);
+        imageViewComment = (ImageView) itemView.findViewById(R.id.imgViewComment);
+
+        textViewLike = (TextView) itemView.findViewById(R.id.textViewLike);
+
+        linearLayoutUser = (LinearLayout) itemView.findViewById(R.id.linearLayoutUser);
+        linearLayoutPost = (LinearLayout) itemView.findViewById(R.id.linearLayoutPost);
     }
 
     public View getItemView() {
         return itemView;
     }
 
-    public ImageView getImageViewPostImage() {
-        return imageViewPostImage;
-    }
-
-    public ImageView getImgViewtUserImage() {
-        return imgViewtUserImage;
-    }
-
-    public TextView getTextUserName() {
-        return textUserName;
-    }
-
-    public TextView getTextTitle() {
-        return textTitle;
-    }
-
-    public TextView getTextDescription() {
-        return textDescription;
-    }
-
-    public void setImage(final Context context, final String imageURL) {
+    public void setImage(final String imageURL) {
 
         Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE).into(imageViewPostImage, new Callback() {
             @Override
@@ -84,7 +77,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         textDescription.setText(description);
     }
 
-    public void setUserNameImage(final Context context, final String imageURL) {
+    public void setUserNameImage(final String imageURL) {
 
         Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE).into(imgViewtUserImage, new Callback() {
             @Override
@@ -121,4 +114,32 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         imgViewtUserImage.setVisibility(visibility);
     }
 
+    public ImageView getImageViewLike() {
+        return imageViewLike;
+    }
+
+    public ImageView getImageViewComment() {
+        return imageViewComment;
+    }
+
+    public void setImageViewLike(boolean like) {
+        if (like) {
+            imageViewLike.setImageDrawable(context.getResources().getDrawable(R.mipmap.color_heart));
+        } else {
+            imageViewLike.setImageDrawable(context.getResources().getDrawable(R.mipmap.simple_heart));
+        }
+    }
+
+    public void setLikeCount(long count) {
+        textViewLike.setText(count + " likes");
+    }
+
+
+    public LinearLayout getLinearLayoutUser() {
+        return linearLayoutUser;
+    }
+
+    public LinearLayout getLinearLayoutPost() {
+        return linearLayoutPost;
+    }
 }
