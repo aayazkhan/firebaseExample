@@ -360,7 +360,7 @@ public class PostActivity extends AppCompatActivity {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.post_row, parent, false);
 
-            PostViewHolder postViewHolder = new PostViewHolder(PostActivity.this, itemView);
+            PostViewHolder postViewHolder = new PostViewHolder(itemView);
 
             return postViewHolder;
         }
@@ -369,11 +369,11 @@ public class PostActivity extends AppCompatActivity {
         public void onBindViewHolder(final PostViewHolder postViewHolder, int position) {
             final Post post = posts.get(position);
 
-            postViewHolder.setImage(post.getImage_url());
+            postViewHolder.setImage(PostActivity.this, post.getImage_url());
             postViewHolder.setTitle(post.getTitle());
             postViewHolder.setDescription(post.getDescription());
 
-            postViewHolder.setUserNameImage(post.getUser().getProfilePic());
+            postViewHolder.setUserNameImage(PostActivity.this, post.getUser().getProfilePic());
             postViewHolder.setUserName(post.getUser().getUserName());
 
             postViewHolder.getLinearLayoutUser().setOnClickListener(new View.OnClickListener() {
@@ -397,7 +397,7 @@ public class PostActivity extends AppCompatActivity {
                 }
             });
 
-            postViewHolder.setImageViewLike(post.isLike());
+            postViewHolder.setImageViewLike(PostActivity.this, post.isLike());
             postViewHolder.setLikeCount(post.getLikeCount());
 
             postViewHolder.getImageViewLike().setOnClickListener(new View.OnClickListener() {
@@ -406,12 +406,12 @@ public class PostActivity extends AppCompatActivity {
 
                     databaseReferencePostLike = databaseReferencePosts.child(post.getID() + "/" + MyApplication.tbl_POST_LIKE);
                     if (post.isLike()) {
-                        postViewHolder.setImageViewLike(false);
+                        postViewHolder.setImageViewLike(PostActivity.this, false);
                         post.setLike(false);
                         databaseReferencePostLike.child(user.getUid()).removeValue();
                         post.setLikeCount(post.getLikeCount() - 1);
                     } else {
-                        postViewHolder.setImageViewLike(true);
+                        postViewHolder.setImageViewLike(PostActivity.this, true);
                         post.setLike(true);
                         databaseReferencePostLike.child(user.getUid()).setValue(simpleDateFormat.format(new Date()));
                         post.setLikeCount(post.getLikeCount() + 1);

@@ -21,6 +21,14 @@ public class Post implements Comparable<Post>, Serializable {
     public Post() {
     }
 
+    public Post(String title, String description, String image_url, String datetime, String UID) {
+        this.title = title;
+        this.description = description;
+        this.image_url = image_url;
+        this.datetime = datetime;
+        this.UID = UID;
+    }
+
     public String getID() {
         return ID;
     }

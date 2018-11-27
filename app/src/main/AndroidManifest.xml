@@ -17,8 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SinglePostActivity" />
         <activity android:name=".NewPostActivity" />
+        <activity android:name=".SinglePostActivity" />
+        <activity android:name=".CommentActivity"/>
         <activity android:name=".Auth.LoginActivity" />
         <activity android:name=".Auth.SignUpActivity" />
         <activity android:name=".account.SetupAccount" />

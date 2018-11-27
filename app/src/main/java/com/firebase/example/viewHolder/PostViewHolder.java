@@ -25,11 +25,9 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     private LinearLayout linearLayoutUser, linearLayoutPost;
 
     private ImageView imageViewLike, imageViewComment;
-    private Context context;
 
-    public PostViewHolder(Context context, View itemView) {
+    public PostViewHolder(View itemView) {
         super(itemView);
-        this.context = context;
         this.itemView = itemView;
 
         imgViewtUserImage = (ImageView) itemView.findViewById(R.id.imgViewtUserImage);
@@ -52,7 +50,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         return itemView;
     }
 
-    public void setImage(final String imageURL) {
+    public void setImage(final Context context, final String imageURL) {
 
         Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE).into(imageViewPostImage, new Callback() {
             @Override
@@ -77,7 +75,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         textDescription.setText(description);
     }
 
-    public void setUserNameImage(final String imageURL) {
+    public void setUserNameImage(final Context context, final String imageURL) {
 
         Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE).into(imgViewtUserImage, new Callback() {
             @Override
@@ -122,7 +120,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         return imageViewComment;
     }
 
-    public void setImageViewLike(boolean like) {
+    public void setImageViewLike(Context context, boolean like) {
         if (like) {
             imageViewLike.setImageDrawable(context.getResources().getDrawable(R.mipmap.color_heart));
         } else {

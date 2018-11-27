@@ -195,7 +195,7 @@ public class UserProfile extends AppCompatActivity {
 
                 Query queryUserPost = databaseReferencePosts.orderByChild("UID").equalTo(user_id);
 
-                queryUserPost.addValueEventListener(new ValueEventListener() {
+                queryUserPost.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         postCount = (int) dataSnapshot.getChildrenCount();
@@ -214,13 +214,12 @@ public class UserProfile extends AppCompatActivity {
                     @Override
                     protected void populateViewHolder(PostViewHolder viewHolder, Post post, final int position) {
 
-
                         viewHolder.setTitleVisibility(View.GONE);
                         viewHolder.setDescriptionVisibility(View.GONE);
                         viewHolder.setUserNameVisibility(View.GONE);
                         viewHolder.setUserNameImageVisibility(View.GONE);
 
-                        viewHolder.setImage(post.getImage_url());
+                        viewHolder.setImage(UserProfile.this, post.getImage_url());
 
                         viewHolder.getItemView().getLayoutParams().width = devicewidth;
                         viewHolder.getItemView().getLayoutParams().height = devicewidth;
