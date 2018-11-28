@@ -14,7 +14,7 @@ public class MyApplication extends Application {
     public static String tbl_POSTS = "Posts";
 
     public static String tbl_POST_LIKE = "likes";
-
+    public static String tbl_POST_COMMENT = "comments";
 
     public static String tbl_FOLLOWING = "Following";
 

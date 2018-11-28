@@ -1,5 +1,6 @@
 package com.firebase.example;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -89,7 +90,6 @@ public class SinglePostActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-
 
         databaseReferenceUsers = FirebaseDatabase.getInstance().getReference(MyApplication.tbl_USERS);
         databaseReferenceUsers.keepSynced(true);
@@ -211,6 +211,13 @@ public class SinglePostActivity extends AppCompatActivity {
         }
 
         textViewLike.setText(likeCount + " likes");
+    }
+
+    @OnClick(R.id.imgViewComment)
+    public void onImgViewCOmment() {
+        Intent intent = new Intent(SinglePostActivity.this, CommentActivity.class);
+        intent.putExtra("post_id", post_id);
+        startActivity(intent);
     }
 
     @OnClick(R.id.btnSubmit)

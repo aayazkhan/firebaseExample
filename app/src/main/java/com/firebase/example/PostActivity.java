@@ -421,6 +421,17 @@ public class PostActivity extends AppCompatActivity {
                 }
             });
 
+            postViewHolder.getImageViewComment().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String POST_ID = post.getID();
+
+                    Intent intent = new Intent(PostActivity.this, CommentActivity.class);
+                    intent.putExtra("post_id", POST_ID);
+                    startActivity(intent);
+                }
+            });
+
         }
 
         @Override
